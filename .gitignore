@@ -1,0 +1,22 @@
+# Build folders
+bin/
+obj/
+
+# IDE files
+.idea/
+*.user
+*.suo
+.vs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Local settings (keep connection strings private)
+appsettings.Development.json
+
+# NuGet
+*.nupkg
+
+# EF Core migrations (optional - but you already have them in git)
+# Migrations/
