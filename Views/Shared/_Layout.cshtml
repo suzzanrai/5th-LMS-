@@ -372,8 +372,8 @@
         // ==================== SESSION TIMEOUT MANAGEMENT ====================
         // Session timeout: 30 minutes (from Program.cs configuration)
         // Warning timeout: 5 minutes before expiration (25 minutes of inactivity)
-        const SESSION_DURATION = 30 * 60 * 1000; // 30 minutes in milliseconds
-        const WARNING_TIME = 5 * 60 * 1000; // 5 minutes before timeout
+        const SESSION_DURATION = 10 * 60 * 1000; // 30 minutes in milliseconds
+        const WARNING_TIME = 2 * 60 * 1000; // 5 minutes before timeout
         const CHECK_INTERVAL = 1000; // Check every 1 second
         
         let sessionTimeoutId = null;

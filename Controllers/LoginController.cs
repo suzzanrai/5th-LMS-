@@ -67,8 +67,8 @@ namespace Practice_Project.Controllers
 
             var authProperties = new AuthenticationProperties
             {
-                IsPersistent = true, // Remember me (cookie persists after browser close)
-                ExpiresUtc = DateTimeOffset.UtcNow.AddHours(8) // Session length
+                IsPersistent = false, // Remember me (cookie persists after browser close)
+             //   ExpiresUtc = DateTimeOffset.UtcNow.AddHours(8) // Session length
             };
 
             await HttpContext.SignInAsync(
