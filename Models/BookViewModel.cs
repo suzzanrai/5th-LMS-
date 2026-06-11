@@ -18,7 +18,7 @@ namespace Practice_Project.Models
         public string ISBN { get; set; } = string.Empty;
 
         [Required]
-        [Range(1990, 2025)]
+        [Range(1450, 2100, ErrorMessage = "Publication year must be between 1450 and 2100.")]
         public int PublicationYear { get; set; }
 
         [Required]
@@ -36,14 +36,18 @@ namespace Practice_Project.Models
         public bool IsActive { get; set; } = true;
 
         // Foreign keys (dropdowns)
-        [Required(ErrorMessage = "Please select an author")]
+        [Range(1, int.MaxValue, ErrorMessage = "Please select an author")]
         public int AuthorId { get; set; }
 
-        [Required(ErrorMessage = "Please select a category")]
+        [Range(1, int.MaxValue, ErrorMessage = "Please select a category")]
         public int CategoryId { get; set; }
 
         // For SelectList in views
         public IEnumerable<SelectListItem>? Authors { get; set; }
         public IEnumerable<SelectListItem>? Categories { get; set; }
+
+        // Display names used in index/delete views
+        public string? AuthorName { get; set; }
+        public string? CategoryName { get; set; }
     }
 }

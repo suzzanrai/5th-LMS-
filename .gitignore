@@ -20,3 +20,48 @@ appsettings.Development.json
 
 # EF Core migrations (optional - but you already have them in git)
 # Migrations/
+# Build artifacts
+/bin/
+/obj/
+/out/
+
+# Visual Studio / Rider / IDE
+
+*.iml
+
+# Rider cache
+
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+
+# ASP.NET
+
+*.db
+
+# EF migrations - if you decide NOT to version them (optional)
+# Migrations/
+
+# Mac OS
+
+
+# dotnet tool caches
+*.dotnet_tool*
+
+# NuGet
+
+packages/
+project.lock.json
+.nuget/
+
+# logs
+*.log
+
+# Publish output
+publish/
+
+# Rider caches
+
+
+# Node
+node_modules/

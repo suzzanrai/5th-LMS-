@@ -1,4 +1,4 @@
-@model IEnumerable<Practice_Project.Entities.Book>
+@model IEnumerable<Practice_Project.Models.BookViewModel>
 @{
     ViewData["Title"] = "Books Management";
 }
@@ -11,9 +11,9 @@
             <input class="form-control"
                    type="text"
                    name="searchString"
-                   placeholder="Search by Student Name"
+                   placeholder="Search by title, author, or category"
                    aria-label="Search"
-                   value="@Context.Request.Query["CurrentFilter"]"/>
+                   value="@ViewData["CurrentFilter"]"/>
 
             <button class="btn btn-outline-success" type="submit">
                 Search
@@ -57,10 +57,10 @@
                     @foreach (var book in Model)
                     {
                         <tr>
-                            <td>@book.Id</td>
+                            <td>@book.BookId</td>
                             <td><strong>@book.Title</strong></td>
-                            <td>@book.Author.Name</td>
-                            <td><span class="badge bg-secondary">@book.Category.Name</span></td>
+                            <td>@book.AuthorName</td>
+                            <td><span class="badge bg-secondary">@book.CategoryName</span></td>
                             <td><code>@book.ISBN</code></td>
                             <td>@book.PublicationYear</td>
                             <td>
@@ -80,8 +80,8 @@
                                 }
                             </td>
                             <td class="text-center">
-                                <a asp-action="Edit" asp-route-id="@book.Id" class="btn btn-warning btn-sm">Edit</a>
-                                <a asp-action="Delete" asp-route-id="@book.Id" class="btn btn-danger btn-sm">Delete</a>
+                                <a asp-action="Edit" asp-route-id="@book.BookId" class="btn btn-warning btn-sm">Edit</a>
+                                <a asp-action="Delete" asp-route-id="@book.BookId" class="btn btn-danger btn-sm">Delete</a>
                             </td>
                         </tr>
                     }

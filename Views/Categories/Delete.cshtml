@@ -1,4 +1,4 @@
-@model Practice_Project.Entities.Category  
+@model Practice_Project.Models.CategoryViewModel
 
 @{
     ViewData["Title"] = "Delete Category";
@@ -27,7 +27,7 @@
             }
 
             <p><strong>Books in this category:</strong> 
-                <span class="badge bg-warning">@Model.Books.Count</span>
+                <span class="badge bg-warning">@Model.BooksCount</span>
             </p>
         </div>
     </div>

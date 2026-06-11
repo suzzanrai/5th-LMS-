@@ -1,4 +1,4 @@
-@model Practice_Project.Entities.Student
+@model Practice_Project.Models.StudentVm
 
 @{
     ViewData["Title"] = "Delete Student";
@@ -25,13 +25,6 @@
 
             <dt class="col-sm-3">Roll Number</dt>
             <dd class="col-sm-9">@Model.RollNumber</dd>
-
-            @*<dt class="col-sm-3">Status</dt>*@
-            @*<dd class="col-sm-9">
-                <span class="badge @(Model.IsActive ? "bg-success" : "bg-danger")">
-                    @(Model.IsActive ? "Active" : "Inactive")
-                </span>
-            </dd>*@
         </dl>
     </div>
 </div>
@@ -39,7 +32,7 @@
 <br />
 
 <form asp-action="Delete" method="post">
-    <input type="hidden" name="id" value="@Model.Id" />
+    <input type="hidden" name="id" value="@Model.StudentId" />
     <button type="submit" class="btn btn-danger">Yes, Delete</button>
     <a asp-action="Index" class="btn btn-secondary">Cancel</a>
 </form>

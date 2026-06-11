@@ -1,4 +1,4 @@
-@model IEnumerable<Practice_Project.Entities.Student>
+@model IEnumerable<Practice_Project.Models.StudentVm>
 
 @{
     ViewData["Title"] = "Students List";
@@ -6,35 +6,14 @@
 <div class="container mt-4">
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="text-success fw-bold ">Students Management</h2>
-    @*
-    <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
-        <button class="btn btn-outline-success" type="submit">Search</button>
-    </form>
-    *@
-    
-    @*<form asp-action="Index" method="get" class="d-flex" role="search">
-        <div class="input-group">
-            <input type="search"
-                   name="searchString"
-                   value="@Context.Request.Query["searchString"]"
-                   class="form-control me-2"
-                   placeholder="Search by student name" />
-            <button type="submit" class="btn btn-outline-success">Search</button>
-            <a asp-action="Index" class="btn btn-outline-success ">
-                Reset
-            </a>
-        </div>
-    </form>*@
-    
     
     <form asp-action="Index" method="get" class="d-flex align-items-center gap-1">
         <input class="form-control "
                type="text"
                name="searchString"
-               placeholder="Search by Student Name"
+               placeholder="Search by student name"
                aria-label="Search"
-               value="@Context.Request.Query["searchString"]"/>
+               value="@ViewData["CurrentFilter"]"/>
 
         <button class="btn btn-outline-success" type="submit">
             Search
@@ -45,7 +24,6 @@
             Reset
         </a>
     </form>
-    
     
     
     <a asp-action="Create" class="btn btn-success btn-lg">
@@ -62,9 +40,6 @@
         <th>Email</th>
         <th>Phone</th>
         <th>Roll Number</th>
-        @*
-        <th>Status</th>
-        *@
         <th>Actions</th>
     </tr>
     </thead>
@@ -76,14 +51,9 @@
             <td>@item.Email</td>
             <td>@item.Phone</td>
             <td>@item.RollNumber</td>
-            @*<td>
-                <span class="badge @(item.IsActive ? "bg-success" : "bg-danger")">
-                    @(item.IsActive ? "Active" : "Inactive")
-                </span>
-            </td>*@
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Edit</a>
-                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.StudentId" class="btn btn-sm btn-warning">Edit</a>
+                <a asp-action="Delete" asp-route-id="@item.StudentId" class="btn btn-sm btn-danger">Delete</a>
             </td>
         </tr>
     }

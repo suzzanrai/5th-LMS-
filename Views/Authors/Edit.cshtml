@@ -2,7 +2,7 @@
 @model Practice_Project.Models.AuthorViewModel
 
 @{
-    ViewData["Title"] = ViewBag.Title ?? "Create Author";
+    ViewData["Title"] = "Edit Author";
 }
 
 <div class="container mt-5">
@@ -15,8 +15,8 @@
                     </h3>
                 </div>
                 <div class="card-body p-5">
-                    <form asp-action="@(ViewContext.RouteData.Values["action"])" method="post">
-                        @if (ViewContext.RouteData.Values["action"].ToString() == "Edit")
+                    <form asp-action="@(ViewContext.RouteData.Values["action"])" asp-route-id="@Model.AuthorId" method="post">
+                        @if (ViewContext.RouteData.Values["action"]?.ToString() == "Edit")
                         {
                             <input type="hidden" asp-for="AuthorId" />
                         }
@@ -48,6 +48,6 @@
     </div>
 </div>
 
-@*@section Scripts {
+@section Scripts {
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
-}*@
+}

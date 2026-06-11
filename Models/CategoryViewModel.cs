@@ -13,5 +13,7 @@ namespace Practice_Project.Models
         public string Name { get; set; } = string.Empty;
 
         public string? Description { get; set; }
+
+        public int BooksCount { get; set; }
     }
 }

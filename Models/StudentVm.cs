@@ -17,7 +17,7 @@ public class StudentVm
     
     [Required(ErrorMessage = "Phone number is required.")]
     [RegularExpression(@"^\d{10}$", ErrorMessage = "Phone number must be exactly 10 digits.")]
-    public string Phone { get; set; }
+    public string Phone { get; set; } = string.Empty;
 
     public int RollNumber { get; set; }
 

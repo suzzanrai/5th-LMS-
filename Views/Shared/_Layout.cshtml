@@ -255,50 +255,50 @@
         {
             <a asp-controller="Dashboard" asp-action="Index"
                class="@(Context.Request.Path.StartsWithSegments("/Dashboard") ? "active" : "")">
-                <span class="icon">📊</span> Dashboard
+                <span class="icon"></span> Dashboard
             </a>
 
             <a asp-controller="Student" asp-action="Index"
                class="@(Context.Request.Path.StartsWithSegments("/Student") ? "active" : "")">
-                <span class="icon">👨‍🎓</span> Student
+                <span class="icon"></span> Student
             </a>
 
             <a asp-controller="Authors" asp-action="Index"
                class="@(Context.Request.Path.StartsWithSegments("/Authors") ? "active" : "")">
-                <span class="icon">✍️</span> Authors
+                <span class="icon"></span> Authors
             </a>
 
             <a asp-controller="Categories" asp-action="Index"
                class="@(Context.Request.Path.StartsWithSegments("/Categories") ? "active" : "")">
-                <span class="icon">🏷️</span> Categories
+                <span class="icon"></span> Categories
             </a>
 
             <a asp-controller="Books" asp-action="Index"
                class="@(Context.Request.Path.StartsWithSegments("/Books") ? "active" : "")">
-                <span class="icon">📚</span> Books
+                <span class="icon"></span> Books
             </a>
 
             <a asp-controller="BookIssue" asp-action="Index"
                class="@(Context.Request.Path.StartsWithSegments("/BookIssue") ? "active" : "")">
-                <span class="icon">🔄</span> Book Issue
+                <span class="icon"></span> Book Issue
             </a>
 
             <a asp-controller="Pay" asp-action="Index"
                class="@(Context.Request.Path.StartsWithSegments("/Pay") ? "active" : "")">
-                <span class="icon">💰</span> Fine
+                <span class="icon"></span> Fine
             </a>
 
             @if (User.IsInRole("Admin"))
             {
                 <a asp-controller="Auth" asp-action="Register"
                    class="@(Context.Request.Path.StartsWithSegments("/Auth/Register") ? "active" : "")">
-                    <span class="icon">👤</span> Register Staff
+                    <span class="icon"></span> Register Staff
                 </a>
             }
 
             <!-- Logout button - separated and at the bottom -->
             <a asp-controller="Account" asp-action="Logout" class="logout-btn">
-                <span class="me-2">⬅️</span> Logout
+                <span class="me-2">⬅</span> Logout
             </a>
         }
     </div>

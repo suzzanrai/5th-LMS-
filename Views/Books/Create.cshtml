@@ -24,7 +24,7 @@
 
     <div class="form-group mb-3">
         <label asp-for="AuthorId" class="form-label"></label>
-        <select asp-for="AuthorId" class="form-control" asp-items="ViewBag.AuthorId">
+        <select asp-for="AuthorId" class="form-control" asp-items="Model.Authors">
             <option value="">-- Select Author --</option>
         </select>
         <span asp-validation-for="AuthorId" class="text-danger"></span>
@@ -32,7 +32,7 @@
 
     <div class="form-group mb-3">
         <label asp-for="CategoryId" class="form-label"></label>
-        <select asp-for="CategoryId" class="form-control" asp-items="ViewBag.CategoryId">
+        <select asp-for="CategoryId" class="form-control" asp-items="Model.Categories">
             <option value="">-- Select Category --</option>
         </select>
         <span asp-validation-for="CategoryId" class="text-danger"></span>

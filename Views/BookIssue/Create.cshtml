@@ -8,6 +8,7 @@
     <h2 class="mb-4">Issue New Book</h2>
 
     <form asp-action="Create" method="post">
+        <div asp-validation-summary="All" class="text-danger mb-3"></div>
         <div class="card">
             <div class="card-body">
                 <div class="row">
@@ -47,6 +48,6 @@
     </form>
 </div>
 
-@*@section Scripts {
+@section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}*@
+}

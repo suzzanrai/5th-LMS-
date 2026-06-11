@@ -1,123 +1,74 @@
-// Controllers/CategoriesController.cs
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Practice_Project.Data;
-using Practice_Project.Entities;
 using Practice_Project.Models;
+using Practice_Project.Services;
 
 namespace Practice_Project.Controllers
 {
     public class CategoriesController : Controller
     {
-        private readonly LibraryDbContext _context;
+        private readonly ICategoryServices _categoryService;
 
-        public CategoriesController(LibraryDbContext context) => _context = context;
+        public CategoriesController(ICategoryServices categoryService) => _categoryService = categoryService;
 
-        // GET: Categories
         public async Task<IActionResult> Index(string searchString)
         {
-            // Start with all categories
-            var categories = _context.Categories
-                .Include(c => c.Books) // Keep book count
-                .AsQueryable();
-
-            // Filter by Category Name
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                categories = categories.Where(c =>
-                    c.Name.Contains(searchString));
-            }
-
-            // Order by Name
-            categories = categories.OrderBy(c => c.Name);
-
-            return View(await categories.ToListAsync());
+            ViewData["CurrentFilter"] = searchString;
+            var categories = await _categoryService.GetAllAsync(searchString);
+            return View(categories);
         }
 
-
-        // GET: Categories/Create
         public IActionResult Create() => View(new CategoryViewModel());
 
-        // POST: Categories/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CategoryViewModel model)
         {
-            if (ModelState.IsValid)
-            {
-                var category = new Category
-                {
-                    Name = model.Name,
-                    Description = model.Description
-                };
-                _context.Categories.Add(category);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(model);
+            if (!ModelState.IsValid)
+                return View(model);
+
+            await _categoryService.CreateAsync(model);
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: Categories/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
 
-            var category = await _context.Categories.FindAsync(id);
-            if (category == null) return NotFound();
+            var model = await _categoryService.GetByIdAsync(id.Value);
+            if (model == null) return NotFound();
 
-            var model = new CategoryViewModel
-            {
-                CategoryId = category.CategoryId,   // ← Critical fix!
-                Name = category.Name,
-                Description = category.Description
-            };
             return View(model);
         }
 
-        // POST: Categories/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, CategoryViewModel model)
         {
+            if (id <= 0) id = model.CategoryId;
             if (id != model.CategoryId) return NotFound();
 
-            if (ModelState.IsValid)
-            {
-                var category = await _context.Categories.FindAsync(id);
-                if (category == null) return NotFound();
+            if (!ModelState.IsValid)
+                return View(model);
 
-                category.Name = model.Name;
-                category.Description = model.Description;
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(model);
+            await _categoryService.UpdateAsync(model);
+            return RedirectToAction(nameof(Index));
         }
 
-        // GET: Categories/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
 
-            var category = await _context.Categories
-                .Include(c => c.Books)           // For book count in Delete view
-                .FirstOrDefaultAsync(c => c.CategoryId == id);
+            var model = await _categoryService.GetByIdAsync(id.Value);
+            if (model == null) return NotFound();
 
-            if (category == null) return NotFound();
-            return View(category);
+            return View(model);
         }
 
-        // POST: Categories/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var category = await _context.Categories.FindAsync(id);
-            if (category != null)
-            {
-                _context.Categories.Remove(category);
-                await _context.SaveChangesAsync();
-            }
+            await _categoryService.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
     }
