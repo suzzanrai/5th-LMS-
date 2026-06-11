@@ -15,14 +15,16 @@ builder.Services.AddDbContext<LibraryDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
-// Authentication & Authorization
+// Authentication & Authorization with Session Timeout
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
         options.LoginPath = "/Account/Login";
         options.AccessDeniedPath = "/Account/AccessDenied";
-        options.ExpireTimeSpan = TimeSpan.FromHours(8);
-        options.SlidingExpiration = true;
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(30); // Session timeout: 30 minutes
+        options.SlidingExpiration = true; // Reset timeout on each activity
+        options.Cookie.HttpOnly = true; // Prevent JavaScript access to cookie
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // HTTPS only
     });
 
 builder.Services.AddAuthorization(); // Explicitly added (good practice)

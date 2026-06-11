@@ -45,9 +45,15 @@ public class LibraryDbContext : DbContext
 
         modelBuilder.Entity<Fine>()
             .HasOne(f => f.BookIssue)
-            .WithMany()
+            .WithMany(bi => bi.Fines)
             .HasForeignKey(f => f.BookIssueId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Fine>()
+            .HasOne(f => f.Student)
+            .WithMany(s => s.Fines)
+            .HasForeignKey(f => f.StudentId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         base.OnModelCreating(modelBuilder);
     }

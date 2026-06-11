@@ -14,16 +14,19 @@
 }
 <h3 class="text-center mb-4" style="font-weight: 700; color: #0a53be;">Login Here !</h3>
 
-<form asp-action="Login" method="post">
+<form asp-action="Login" method="post" id="loginForm">
     <div class="mb-4">
         <label class="form-label">Email Address</label>
-        <input type="email" name="email" class="form-control form-control-lg" 
+        <input type="email" name="email" id="emailInput" class="form-control form-control-lg" 
                placeholder="admin@example.com" required autofocus />
+        <small class="text-muted" id="emailTimeoutWarning" style="display: none; color: #ff6b6b;">
+            ⚠️ Session expired. Please re-enter your email.
+        </small>
     </div>
 
     <div class="mb-4">
         <label class="form-label">Password</label>
-        <input type="password" name="password" class="form-control form-control-lg" 
+        <input type="password" name="password" id="passwordInput" class="form-control form-control-lg" 
                placeholder="Enter your password" required />
     </div>
 
@@ -46,3 +49,82 @@
         Only authorized Librarians and Admins can access this system.
     </small>
 </div>
+
+<!-- Login Form Timeout Security Script -->
+<script>
+    (function() {
+        const emailInput = document.getElementById('emailInput');
+        const passwordInput = document.getElementById('passwordInput');
+        const emailTimeoutWarning = document.getElementById('emailTimeoutWarning');
+        const loginForm = document.getElementById('loginForm');
+        
+        let emailFieldTimeout = null;
+        let emailTimeoutExpired = false; // Track if timeout has expired
+        const TIMEOUT_DURATION = 10000; // 10 seconds
+
+        // Monitor email field changes
+        emailInput.addEventListener('input', function() {
+            // Clear previous timeout
+            if (emailFieldTimeout) {
+                clearTimeout(emailFieldTimeout);
+            }
+            emailTimeoutExpired = false;
+
+            // If email field has value, set a timeout
+            if (emailInput.value.trim() !== '') {
+                emailTimeoutWarning.style.display = 'none';
+                
+                // Set timeout after 10 seconds of inactivity
+                emailFieldTimeout = setTimeout(function() {
+                    // Email has been filled for 10+ seconds without action
+                    emailTimeoutExpired = true;
+                    emailFieldTimeout = null;
+                    console.log('Email field timeout: User must re-enter email');
+                }, TIMEOUT_DURATION);
+            }
+        });
+
+        // When user focuses on password field
+        passwordInput.addEventListener('focus', function() {
+            // Check if email field timeout has expired
+            if (emailInput.value.trim() !== '' && emailTimeoutExpired) {
+                // Timeout expired - clear email field
+                emailInput.value = '';
+                emailTimeoutWarning.style.display = 'block';
+                emailInput.focus();
+                
+                // Clear warning after 3 seconds
+                setTimeout(function() {
+                    emailTimeoutWarning.style.display = 'none';
+                }, 3000);
+                
+                emailTimeoutExpired = false;
+                console.log('Email cleared due to inactivity timeout');
+            }
+        });
+
+        // When user interacts with email field again
+        emailInput.addEventListener('focus', function() {
+            if (emailFieldTimeout) {
+                clearTimeout(emailFieldTimeout);
+                emailFieldTimeout = null;
+            }
+            emailTimeoutExpired = false;
+            emailTimeoutWarning.style.display = 'none';
+        });
+
+        // On form submission, validate that both fields have recent data
+        loginForm.addEventListener('submit', function(e) {
+            if (emailInput.value.trim() === '') {
+                e.preventDefault();
+                emailTimeoutWarning.textContent = '⚠️ Email field is empty. Please enter your email.';
+                emailTimeoutWarning.style.display = 'block';
+                emailInput.focus();
+                
+                setTimeout(function() {
+                    emailTimeoutWarning.style.display = 'none';
+                }, 3000);
+            }
+        });
+    })();
+</script>

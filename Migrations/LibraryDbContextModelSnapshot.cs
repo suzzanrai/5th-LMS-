@@ -168,9 +168,6 @@ namespace Practice_Project.Migrations
                     b.Property<int>("BookIssueId")
                         .HasColumnType("integer");
 
-                    b.Property<int?>("BookIssueId1")
-                        .HasColumnType("integer");
-
                     b.Property<DateTime>("CalculatedOn")
                         .HasColumnType("timestamp with time zone");
 
@@ -189,8 +186,6 @@ namespace Practice_Project.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("BookIssueId");
-
-                    b.HasIndex("BookIssueId1");
 
                     b.HasIndex("StudentId");
 
@@ -310,19 +305,15 @@ namespace Practice_Project.Migrations
             modelBuilder.Entity("Practice_Project.Entities.Fine", b =>
                 {
                     b.HasOne("Practice_Project.Entities.BookIssue", "BookIssue")
-                        .WithMany()
+                        .WithMany("Fines")
                         .HasForeignKey("BookIssueId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Practice_Project.Entities.BookIssue", null)
-                        .WithMany("Fines")
-                        .HasForeignKey("BookIssueId1");
-
                     b.HasOne("Practice_Project.Entities.Student", "Student")
                         .WithMany("Fines")
                         .HasForeignKey("StudentId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("BookIssue");

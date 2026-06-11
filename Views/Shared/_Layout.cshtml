@@ -297,9 +297,10 @@
             }
 
             <!-- Logout button - separated and at the bottom -->
-            <a asp-controller="Account" asp-action="Logout" class="logout-btn">
-                <span class="me-2">⬅</span> Logout
-            </a>
+
+            <button type="button" id="logoutBtn" class="logout-btn" data-bs-toggle="modal" data-bs-target="#logoutConfirmModal">
+                <span class="me-2">⬅️</span> Logout
+            </button>
         }
     </div>
 
@@ -315,9 +316,215 @@
     <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
 </div>
 
+<!-- Logout Confirmation Modal -->
+<div class="modal fade" id="logoutConfirmModal" tabindex="-1" aria-labelledby="logoutConfirmLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="logoutConfirmLabel">Confirm Logout</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="fs-5 mb-0">
+                    <strong>Are you sure you want to logout?</strong>
+                </p>
+                <p class="text-muted mt-2">You will be redirected to the login page and your session will be terminated.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <a href="@Url.Action("Logout", "Account")" class="btn btn-danger">Yes, Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Session Timeout Warning Modal -->
+<div class="modal fade" id="sessionTimeoutModal" tabindex="-1" aria-labelledby="sessionTimeoutLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-warning text-dark">
+                <h5 class="modal-title" id="sessionTimeoutLabel">⏰ Session About to Expire</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="fs-6 mb-3">
+                    <strong>Your session will expire in <span id="timeoutCountdown">5:00</span> minutes</strong>
+                </p>
+                <p class="text-muted mb-0">For security reasons, inactive sessions are automatically logged out. Click "Extend Session" to continue working.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="logoutDueToTimeout()">Logout Now</button>
+                <button type="button" class="btn btn-warning" data-bs-dismiss="modal" onclick="extendSession()">Extend Session</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
+
+<!-- Security Script: Session Timeout & Logout Confirmation -->
+<script>
+    (function() {
+        const isUserAuthenticated = @(User.Identity?.IsAuthenticated.ToString().ToLower());
+        
+        // ==================== SESSION TIMEOUT MANAGEMENT ====================
+        // Session timeout: 30 minutes (from Program.cs configuration)
+        // Warning timeout: 5 minutes before expiration (25 minutes of inactivity)
+        const SESSION_DURATION = 30 * 60 * 1000; // 30 minutes in milliseconds
+        const WARNING_TIME = 5 * 60 * 1000; // 5 minutes before timeout
+        const CHECK_INTERVAL = 1000; // Check every 1 second
+        
+        let sessionTimeoutId = null;
+        let warningTimeoutId = null;
+        let countdownIntervalId = null;
+        let lastActivityTime = Date.now();
+        let sessionWarningShown = false;
+
+        function resetSessionTimer() {
+            // Clear previous timers
+            if (sessionTimeoutId) clearTimeout(sessionTimeoutId);
+            if (warningTimeoutId) clearTimeout(warningTimeoutId);
+            
+            lastActivityTime = Date.now();
+            sessionWarningShown = false;
+
+            // Set warning to show 5 minutes before timeout
+            warningTimeoutId = setTimeout(function() {
+                if (isUserAuthenticated && !sessionWarningShown) {
+                    showSessionTimeoutWarning();
+                }
+            }, SESSION_DURATION - WARNING_TIME);
+
+            // Set actual logout after 30 minutes
+            sessionTimeoutId = setTimeout(function() {
+                if (isUserAuthenticated) {
+                    window.location.href = '@Url.Action("Logout", "Account")';
+                }
+            }, SESSION_DURATION);
+        }
+
+        function showSessionTimeoutWarning() {
+            sessionWarningShown = true;
+            const modal = new bootstrap.Modal(document.getElementById('sessionTimeoutModal'));
+            modal.show();
+            
+            // Start countdown timer
+            let timeRemaining = Math.ceil(WARNING_TIME / 1000); // Convert to seconds
+            
+            countdownIntervalId = setInterval(function() {
+                timeRemaining--;
+                const minutes = Math.floor(timeRemaining / 60);
+                const seconds = timeRemaining % 60;
+                const display = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+                
+                document.getElementById('timeoutCountdown').textContent = display;
+                
+                if (timeRemaining <= 0) {
+                    clearInterval(countdownIntervalId);
+                }
+            }, 1000);
+        }
+
+        // Track user activity to reset session timer
+        const activityEvents = ['mousedown', 'keydown', 'scroll', 'touchstart', 'click'];
+        
+        activityEvents.forEach(function(event) {
+            document.addEventListener(event, function() {
+                if (isUserAuthenticated && (Date.now() - lastActivityTime) > 60000) {
+                    // Reset timer only if 1+ minute has passed since last activity
+                    resetSessionTimer();
+                }
+            }, true);
+        });
+
+        // Initialize session timeout on page load
+        window.addEventListener('load', function() {
+            if (isUserAuthenticated) {
+                resetSessionTimer();
+            }
+        });
+
+        // Global functions for modal buttons
+        window.extendSession = function() {
+            if (countdownIntervalId) clearInterval(countdownIntervalId);
+            resetSessionTimer();
+            console.log('Session extended');
+        };
+
+        window.logoutDueToTimeout = function() {
+            window.location.href = '@Url.Action("Logout", "Account")';
+        };
+
+        // ==================== LOGOUT CONFIRMATION ====================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Prevent accidental logout via keyboard shortcut or form submission
+            const logoutBtn = document.getElementById('logoutBtn');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function(e) {
+                    // Modal will handle the confirmation
+                    console.log('Logout initiated - confirmation required');
+                });
+            }
+        });
+
+        // ==================== BACK BUTTON PREVENTION ====================
+        // Manage browser history to prevent unauthorized back navigation
+        window.addEventListener('load', function() {
+            if (isUserAuthenticated) {
+                // When user is logged in, add history states to prevent going back to login
+                history.pushState(null, null, location.href);
+                
+                // Prevent back button from working after logout
+                window.addEventListener('popstate', function() {
+                    history.pushState(null, null, location.href);
+                });
+            }
+        });
+
+        // ==================== PREVENT DASHBOARD ACCESS WHEN LOGGED OUT ====================
+        // This script runs when page loads
+        window.addEventListener('load', function() {
+            // If user is not authenticated, prevent back button to dashboard
+            if (!isUserAuthenticated) {
+                // Replace history to prevent going back to authenticated pages
+                history.replaceState(null, null, location.href);
+                
+                // Block popstate when not authenticated
+                window.addEventListener('popstate', function(event) {
+                    // Don't allow going back to authenticated pages
+                    if (document.referrer && (document.referrer.includes('/Dashboard') || 
+                        document.referrer.includes('/Student') ||
+                        document.referrer.includes('/Authors') ||
+                        document.referrer.includes('/Categories') ||
+                        document.referrer.includes('/Books') ||
+                        document.referrer.includes('/BookIssue') ||
+                        document.referrer.includes('/Pay'))) {
+                        // Redirect to login instead
+                        window.location.href = '@Url.Action("Login", "Account")';
+                    }
+                });
+            }
+        });
+
+        // ==================== SECURE BROWSER CACHE ====================
+        // Prevent caching of authenticated pages
+        if (isUserAuthenticated) {
+            // Add cache-busting to prevent viewing cached authenticated content
+            if ('caches' in window) {
+                caches.keys().then(function(cacheNames) {
+                    return Promise.all(
+                        cacheNames.map(function(cacheName) {
+                            return caches.delete(cacheName);
+                        })
+                    );
+                });
+            }
+        }
+    })();
+</script>
+
 @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

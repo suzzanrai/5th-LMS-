@@ -146,5 +146,51 @@
 
 <!-- Bootstrap JS -->
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Security Script: Prevent Back Navigation to Authenticated Pages -->
+<script>
+    (function() {
+        // Prevent browser back button from accessing authenticated pages
+        history.replaceState(null, null, location.href);
+        
+        // Block popstate events (back button clicks)
+        window.addEventListener('popstate', function(event) {
+            // Redirect any back navigation attempts to login page
+            history.replaceState(null, null, location.href);
+            
+            // If referrer contains authenticated pages, prevent access
+            if (document.referrer && (
+                document.referrer.includes('/Dashboard') || 
+                document.referrer.includes('/Student') ||
+                document.referrer.includes('/Authors') ||
+                document.referrer.includes('/Categories') ||
+                document.referrer.includes('/Books') ||
+                document.referrer.includes('/BookIssue') ||
+                document.referrer.includes('/Pay'))) {
+                // Keep user on login page
+                window.location.href = location.href;
+            }
+        });
+
+        // Clear browser cache on login page to prevent accessing cached authenticated content
+        if ('caches' in window) {
+            caches.keys().then(function(cacheNames) {
+                return Promise.all(
+                    cacheNames.map(function(cacheName) {
+                        return caches.delete(cacheName);
+                    })
+                );
+            });
+        }
+
+        // Disable back button functionality
+        window.onload = function() {
+            history.pushState(null, null, location.href);
+            window.onpopstate = function() {
+                history.pushState(null, null, location.href);
+            };
+        };
+    })();
+</script>
 </body>
 </html>
