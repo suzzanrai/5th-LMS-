@@ -1,17 +1,13 @@
-﻿@using System.Globalization
+@using System.Globalization
 @using System.Security.Claims
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
-    // Current time in Nepal (Asia/Kathmandu)
     var nepalTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Nepal Standard Time");
     var currentNepalTime = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, nepalTimeZone);
     var formattedTime = currentNepalTime.ToString("dddd, MMMM dd, yyyy", CultureInfo.InvariantCulture);
 
-    // User info for profile
-    var userName = User.Identity.IsAuthenticated && User.FindFirst(ClaimTypes.Name)?.Value != null
-        ? User.FindFirst(ClaimTypes.Name).Value
-        : "Admin";
+    var userName = User.FindFirst(ClaimTypes.Name)?.Value ?? "Admin";
     var firstName = userName.Split(' ').FirstOrDefault() ?? "Admin";
     var firstLetter = string.IsNullOrEmpty(userName) ? "U" : userName.First().ToString().ToUpper();
 }
@@ -30,245 +26,36 @@
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
 
     <style>
-        *, *::before, *::after {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            font-family: 'Inter', sans-serif;
-            background: #ebeef1;
-            color: #1a1d2e;
-            min-height: 100vh;
-        }
-
-        /* ===== SIDEBAR ===== */
-        .sidebar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            width: 240px;
-            background: #0018a8;
-            padding: 24px 16px;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-            overflow-y: auto;
-            z-index: 1100;
-        }
-
-        .sidebar-logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            padding: 8px 12px 20px 12px;
-        }
-
-        .sidebar-logo i {
-            color: #ffffff;
-            font-size: 1.8rem;
-        }
-
-        .sidebar-logo-text {
-            display: flex;
-            flex-direction: column;
-            line-height: 1.2;
-        }
-
-        .sidebar-logo-text span:first-child {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #ffffff;
-        }
-
-        .sidebar-logo-text span:last-child {
-            font-size: 0.75rem;
-            color: rgba(255,255,255,0.75);
-            font-weight: 500;
-        }
-
-        .sidebar-divider {
-            height: 1px;
-            background-color: rgba(255,255,255,0.25);
-            margin: 0 12px 16px 12px;
-        }
-
-        .sidebar a:not(.logout-btn):not(.sidebar-logo) {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: rgba(255,255,255,0.85);
-            text-decoration: none;
-            padding: 12px 16px;
-            border-radius: 10px;
-            font-size: 0.9rem;
-            transition: all 0.15s;
-        }
-
-        .sidebar a i {
-            font-size: 1.2rem;
-        }
-
-        .sidebar a:hover:not(.logout-btn):not(.sidebar-logo) {
-            background: rgba(255, 255, 255, 0.10);
-            color: #ffffff;
-        }
-
-        .sidebar a.active {
-            background: rgba(255, 255, 255, 0.18);
-            color: #ffffff;
-            font-weight: 600;
-        }
-
-        .sidebar-spacer {
-            flex: 1;
-        }
-
-        /* ===== LOGOUT BUTTON ===== */
-        .logout-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 12px;
-            background: transparent;
-            border: 1.5px solid rgba(255,255,255,0.6);
-            color: #fff;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            width: 100%;
-            margin-top: 8px;
-        }
-
-        .logout-btn:hover {
-            background: rgba(255,255,255,0.12);
-            border-color: #fff;
-        }
-
-        /* ===== TOP BAR ===== */
-        .top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 40px;
-            background: #ffffff;
-            height: 80px;
-            border-bottom: 1px solid #e2e8f0;
-            position: fixed;
-            top: 0;
-            left: 240px;
-            width: calc(100% - 240px);
-            z-index: 1000;
-        }
-
-        .top-time {
-            display: flex;
-            align-items: center;
-            color: #252627;
-            font-weight: 500;
-            font-size: 1.1rem;
-        }
-
-        .top-right {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .top-icon-btn {
-            color: #64748b;
-            font-size: 1.4rem;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-
-        .top-icon-btn:hover {
-            color: #0018a8;
-        }
-
-        .profile-section {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .profile-avatar {
-            width: 38px;
-            height: 38px;
-            background: #0018a8;
-            color: #ffffff;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 1rem;
-        }
-
-        .profile-name {
-            display: flex;
-            flex-direction: column;
-            line-height: 1.2;
-        }
-
-        .profile-name .hello {
-            font-size: 0.75rem;
-            color: #64748b;
-        }
-
-        .profile-name .name {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: #1a1d2e;
-        }
-
-        /* ===== MAIN LAYOUT ===== */
-        .main-container {
-            display: flex;
-            margin-top: 80px;
-            margin-left: 240px;
-            min-height: calc(100vh - 80px);
-        }
-
-        .content {
-            flex: 1;
-            padding: 10px 10px;
-            width: 100%;
-        }
-
-        .main-content {
-            background: #ffffff;
-            padding: 36px;
-            max-width: 1400px;
-            width: 100%;
-            margin: 0 auto;
-            border-radius: 16px;
-            border: 1px solid #e2e8f0;
-        }
-
-        /* ===== FOOTER ===== */
-        .footer {
-            padding: 20px;
-            background: #0018a8;
-            color: rgba(255,255,255,0.8);
-            text-align: center;
-            font-size: 13px;
-            margin-left: 240px;
-        }
-
-        .footer a {
-            color: rgba(255,255,255,0.9);
-            text-decoration: none;
-        }
-
-        .footer a:hover {
-            text-decoration: underline;
-        }
+        *, *::before, *::after { box-sizing: border-box; }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: #ebeef1; color: #1a1d2e; min-height: 100vh; }
+        .sidebar { position: fixed; top: 0; left: 0; bottom: 0; width: 240px; background: #0018a8; padding: 24px 16px; display: flex; flex-direction: column; gap: 4px; overflow-y: auto; z-index: 1100; }
+        .sidebar-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; padding: 8px 12px 20px 12px; }
+        .sidebar-logo i { color: #ffffff; font-size: 1.8rem; }
+        .sidebar-logo-text { display: flex; flex-direction: column; line-height: 1.2; }
+        .sidebar-logo-text span:first-child { font-size: 1.2rem; font-weight: 700; color: #ffffff; }
+        .sidebar-logo-text span:last-child { font-size: 0.75rem; color: rgba(255,255,255,0.75); font-weight: 500; }
+        .sidebar-divider { height: 1px; background-color: rgba(255,255,255,0.25); margin: 0 12px 16px 12px; }
+        .sidebar a:not(.logout-btn):not(.sidebar-logo) { display: flex; align-items: center; gap: 12px; color: rgba(255,255,255,0.85); text-decoration: none; padding: 12px 16px; border-radius: 10px; font-size: 0.9rem; transition: all 0.15s; }
+        .sidebar a i { font-size: 1.2rem; }
+        .sidebar a:hover:not(.logout-btn):not(.sidebar-logo) { background: rgba(255, 255, 255, 0.10); color: #ffffff; }
+        .sidebar a.active { background: rgba(255, 255, 255, 0.18); color: #ffffff; font-weight: 600; }
+        .sidebar-spacer { flex: 1; }
+        .logout-btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; background: transparent; border: 1.5px solid rgba(255,255,255,0.6); color: #fff; border-radius: 10px; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.2s; width: 100%; margin-top: 8px; }
+        .logout-btn:hover { background: rgba(255,255,255,0.12); border-color: #fff; }
+        .top { display: flex; justify-content: space-between; align-items: center; padding: 0 40px; background: #ffffff; height: 80px; border-bottom: 1px solid #e2e8f0; position: fixed; top: 0; left: 240px; width: calc(100% - 240px); z-index: 1000; }
+        .top-time { display: flex; align-items: center; color: #252627; font-weight: 500; font-size: 1.1rem; }
+        .top-right { display: flex; align-items: center; gap: 16px; }
+        .profile-section { display: flex; align-items: center; gap: 10px; }
+        .profile-avatar { width: 38px; height: 38px; background: #0018a8; color: #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1rem; }
+        .profile-name { display: flex; flex-direction: column; line-height: 1.2; }
+        .profile-name .hello { font-size: 0.75rem; color: #64748b; }
+        .profile-name .name { font-size: 0.9rem; font-weight: 600; color: #1a1d2e; }
+        .main-container { display: flex; margin-top: 80px; margin-left: 240px; min-height: calc(100vh - 80px); }
+        .content { flex: 1; padding: 10px 10px; width: 100%; }
+        .main-content { background: #ffffff; padding: 36px; max-width: 1400px; width: 100%; margin: 0 auto; border-radius: 16px; border: 1px solid #e2e8f0; }
+        .footer { padding: 20px; background: #0018a8; color: rgba(255,255,255,0.8); text-align: center; font-size: 13px; margin-left: 240px; }
+        .footer a { color: rgba(255,255,255,0.9); text-decoration: none; }
+        .footer a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -285,51 +72,34 @@
 
     @if (User.Identity.IsAuthenticated)
     {
-        <a asp-controller="Dashboard" asp-action="Index"
-           class="@(Context.Request.Path.StartsWithSegments("/Dashboard") ? "active" : "")">
+        <a asp-controller="Dashboard" asp-action="Index" class="@(Context.Request.Path.StartsWithSegments("/Dashboard") ? "active" : "")">
             <i class='bx bxs-dashboard'></i> <span>Dashboard</span>
         </a>
-
-        <a asp-controller="Student" asp-action="Index"
-           class="@(Context.Request.Path.StartsWithSegments("/Student") ? "active" : "")">
+        <a asp-controller="Student" asp-action="Index" class="@(Context.Request.Path.StartsWithSegments("/Student") ? "active" : "")">
             <i class='bx bxs-graduation'></i> <span>Students</span>
         </a>
-
-        <a asp-controller="Authors" asp-action="Index"
-           class="@(Context.Request.Path.StartsWithSegments("/Authors") ? "active" : "")">
+        <a asp-controller="Authors" asp-action="Index" class="@(Context.Request.Path.StartsWithSegments("/Authors") ? "active" : "")">
             <i class='bx bx-edit-alt'></i> <span>Authors</span>
         </a>
-
-        <a asp-controller="Categories" asp-action="Index"
-           class="@(Context.Request.Path.StartsWithSegments("/Categories") ? "active" : "")">
+        <a asp-controller="Categories" asp-action="Index" class="@(Context.Request.Path.StartsWithSegments("/Categories") ? "active" : "")">
             <i class='bx bx-category'></i> <span>Categories</span>
         </a>
-
-        <a asp-controller="Books" asp-action="Index"
-           class="@(Context.Request.Path.StartsWithSegments("/Books") ? "active" : "")">
+        <a asp-controller="Books" asp-action="Index" class="@(Context.Request.Path.StartsWithSegments("/Books") ? "active" : "")">
             <i class='bx bx-book'></i> <span>Books</span>
         </a>
-
-        <a asp-controller="BookIssue" asp-action="Index"
-           class="@(Context.Request.Path.StartsWithSegments("/BookIssue") ? "active" : "")">
+        <a asp-controller="BookIssue" asp-action="Index" class="@(Context.Request.Path.StartsWithSegments("/BookIssue") ? "active" : "")">
             <i class='bx bx-transfer'></i> <span>Book Issue</span>
         </a>
-
-        <a asp-controller="Pay" asp-action="Index"
-           class="@(Context.Request.Path.StartsWithSegments("/Pay") ? "active" : "")">
+        <a asp-controller="Pay" asp-action="Index" class="@(Context.Request.Path.StartsWithSegments("/Pay") ? "active" : "")">
             <i class='bx bx-receipt'></i> <span>Pay / Fine</span>
         </a>
-
         @if (User.IsInRole("Admin"))
         {
-            <a asp-controller="Auth" asp-action="Register"
-               class="@(Context.Request.Path.StartsWithSegments("/Auth/Register") ? "active" : "")">
+            <a asp-controller="Account" asp-action="Register" class="@(Context.Request.Path.StartsWithSegments("/Account/Register") ? "active" : "")">
                 <i class='bx bx-user-plus'></i> <span>Register Staff</span>
             </a>
         }
-
         <div class="sidebar-spacer"></div>
-
         <button type="button" id="logoutBtn" class="logout-btn" data-bs-toggle="modal" data-bs-target="#logoutConfirmModal">
             <i class='bx bx-log-out'></i> <span>Logout</span>
         </button>
@@ -337,12 +107,9 @@
 </div>
 
 <div class="top">
-    <div class="top-time">
-        <span>@formattedTime</span>
-    </div>
+    <div class="top-time"><span>@formattedTime</span></div>
     <div class="top-right">
-        @* <div class="top-icon-btn"><i class='bx bx-bell'></i></div> *@
-        @* <div class="top-icon-btn"><i class='bx bx-help-circle'></i></div> *@
+        <div id="session-timer-display" style="font-size: 0.85rem; color: #64748b; background: #f1f5f9; padding: 4px 10px; border-radius: 20px; font-weight: 600; display: flex; align-items: center; gap: 5px;"><i class='bx bx-time-five'></i> <span id="timer-seconds">30s</span></div>
         <div class="profile-section">
             <div class="profile-avatar">@firstLetter</div>
             <div class="profile-name">
@@ -355,9 +122,7 @@
 
 <div class="main-container">
     <div class="content">
-        <div class="main-content">
-            @RenderBody()
-        </div>
+        <div class="main-content">@RenderBody()</div>
     </div>
 </div>
 
@@ -366,20 +131,12 @@
     <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a>
 </div>
 
-<!-- Logout Confirmation Modal -->
-<div class="modal fade" id="logoutConfirmModal" tabindex="-1" aria-labelledby="logoutConfirmLabel" aria-hidden="true">
+<!-- Modals -->
+<div class="modal fade" id="logoutConfirmModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header bg-danger text-white">
-                <h5 class="modal-title" id="logoutConfirmLabel">Confirm Logout</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p class="fs-5 mb-0">
-                    <strong>Are you sure you want to logout?</strong>
-                </p>
-                <p class="text-muted mt-2">You will be redirected to the login page and your session will be terminated.</p>
-            </div>
+            <div class="modal-header bg-danger text-white"><h5>Confirm Logout</h5></div>
+            <div class="modal-body"><p>Are you sure you want to logout?</p></div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 <a href="@Url.Action("Logout", "Account")" class="btn btn-danger">Yes, Logout</a>
@@ -388,23 +145,14 @@
     </div>
 </div>
 
-<!-- Session Timeout Warning Modal -->
-<div class="modal fade" id="sessionTimeoutModal" tabindex="-1" aria-labelledby="sessionTimeoutLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+<div class="modal fade" id="sessionTimeoutModal" tabindex="-1" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header bg-warning text-dark">
-                <h5 class="modal-title" id="sessionTimeoutLabel">⏰ Session About to Expire</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <p class="fs-6 mb-3">
-                    <strong>Your session will expire in <span id="timeoutCountdown">5:00</span> minutes</strong>
-                </p>
-                <p class="text-muted mb-0">For security reasons, inactive sessions are automatically logged out. Click "Extend Session" to continue working.</p>
-            </div>
+            <div class="modal-header bg-warning"><h5>⏰ Session Expiring</h5></div>
+            <div class="modal-body"><p>Your session will expire in <span id="timeoutCountdown">10</span> seconds.</p></div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" onclick="logoutDueToTimeout()">Logout Now</button>
-                <button type="button" class="btn btn-warning" data-bs-dismiss="modal" onclick="extendSession()">Extend Session</button>
+                <button type="button" class="btn btn-secondary" onclick="window.location.href='/Account/Logout'">Logout Now</button>
+                <button type="button" class="btn btn-warning" onclick="extendSession()">Extend Session</button>
             </div>
         </div>
     </div>
@@ -412,144 +160,52 @@
 
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
 
-<!-- Security Script: Session Timeout & Logout Confirmation -->
+<!-- SESSION TIMER SCRIPT -->
 <script>
-    (function() {
-        const isUserAuthenticated = @(User.Identity?.IsAuthenticated.ToString().ToLower());
+    const isAuthenticated = @(User.Identity.IsAuthenticated.ToString().ToLower());
+    
+    if (isAuthenticated) {
+        let timeLeft = 180;
+        const timerText = document.getElementById("timer-seconds");
 
-        // ==================== SESSION TIMEOUT MANAGEMENT ====================
-        const SESSION_DURATION = 30 * 60 * 1000;
-        const WARNING_TIME = 5 * 60 * 1000;
-        const CHECK_INTERVAL = 1000;
-
-        let sessionTimeoutId = null;
-        let warningTimeoutId = null;
-        let countdownIntervalId = null;
-        let lastActivityTime = Date.now();
-        let sessionWarningShown = false;
-
-        function resetSessionTimer() {
-            if (sessionTimeoutId) clearTimeout(sessionTimeoutId);
-            if (warningTimeoutId) clearTimeout(warningTimeoutId);
-
-            lastActivityTime = Date.now();
-            sessionWarningShown = false;
-
-            warningTimeoutId = setTimeout(function() {
-                if (isUserAuthenticated && !sessionWarningShown) {
-                    showSessionTimeoutWarning();
+        const countdown = setInterval(function() {
+            timeLeft--;
+            if (timerText) timerText.innerText = timeLeft + "s";
+            
+            if (timeLeft <= 10) {
+                const modalEl = document.getElementById("sessionTimeoutModal");
+                if (modalEl && !modalEl.classList.contains("show")) {
+                    document.getElementById("timeoutCountdown").innerText = timeLeft;
+                    new bootstrap.Modal(modalEl).show();
                 }
-            }, SESSION_DURATION - WARNING_TIME);
-
-            sessionTimeoutId = setTimeout(function() {
-                if (isUserAuthenticated) {
-                    window.location.href = '@Url.Action("Logout", "Account")';
-                }
-            }, SESSION_DURATION);
-        }
-
-        function showSessionTimeoutWarning() {
-            sessionWarningShown = true;
-            const modal = new bootstrap.Modal(document.getElementById('sessionTimeoutModal'));
-            modal.show();
-
-            let timeRemaining = Math.ceil(WARNING_TIME / 1000);
-
-            countdownIntervalId = setInterval(function() {
-                timeRemaining--;
-                const minutes = Math.floor(timeRemaining / 60);
-                const seconds = timeRemaining % 60;
-                const display = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
-
-                document.getElementById('timeoutCountdown').textContent = display;
-
-                if (timeRemaining <= 0) {
-                    clearInterval(countdownIntervalId);
-                }
-            }, 1000);
-        }
-
-        const activityEvents = ['mousedown', 'keydown', 'scroll', 'touchstart', 'click'];
-
-        activityEvents.forEach(function(event) {
-            document.addEventListener(event, function() {
-                if (isUserAuthenticated && (Date.now() - lastActivityTime) > 60000) {
-                    resetSessionTimer();
-                }
-            }, true);
-        });
-
-        window.addEventListener('load', function() {
-            if (isUserAuthenticated) {
-                resetSessionTimer();
             }
-        });
+
+            if (timeLeft <= 0) {
+                clearInterval(countdown);
+                window.location.href = "/Account/Logout";
+            }
+        }, 1000);
 
         window.extendSession = function() {
-            if (countdownIntervalId) clearInterval(countdownIntervalId);
-            resetSessionTimer();
-            console.log('Session extended');
+            timeLeft = 180;
+            const modalEl = document.getElementById("sessionTimeoutModal");
+            const modalInstance = bootstrap.Modal.getInstance(modalEl);
+            if (modalInstance) modalInstance.hide();
+            fetch('/Account/Index'); 
         };
 
-        window.logoutDueToTimeout = function() {
-            window.location.href = '@Url.Action("Logout", "Account")';
-        };
-
-        // ==================== LOGOUT CONFIRMATION ====================
-        document.addEventListener('DOMContentLoaded', function() {
-            const logoutBtn = document.getElementById('logoutBtn');
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', function(e) {
-                    console.log('Logout initiated - confirmation required');
-                });
+        document.addEventListener("mousemove", function() {
+            const modalEl = document.getElementById("sessionTimeoutModal");
+            if (modalEl && !modalEl.classList.contains("show")) {
+                timeLeft = 180;
             }
         });
-
-        // ==================== BACK BUTTON PREVENTION ====================
-        window.addEventListener('load', function() {
-            if (isUserAuthenticated) {
-                history.pushState(null, null, location.href);
-
-                window.addEventListener('popstate', function() {
-                    history.pushState(null, null, location.href);
-                });
-            }
-        });
-
-        // ==================== PREVENT DASHBOARD ACCESS WHEN LOGGED OUT ====================
-        window.addEventListener('load', function() {
-            if (!isUserAuthenticated) {
-                history.replaceState(null, null, location.href);
-
-                window.addEventListener('popstate', function(event) {
-                    if (document.referrer && (document.referrer.includes('/Dashboard') ||
-                        document.referrer.includes('/Student') ||
-                        document.referrer.includes('/Authors') ||
-                        document.referrer.includes('/Categories') ||
-                        document.referrer.includes('/Books') ||
-                        document.referrer.includes('/BookIssue') ||
-                        document.referrer.includes('/Pay'))) {
-                        window.location.href = '@Url.Action("Login", "Account")';
-                    }
-                });
-            }
-        });
-
-        // ==================== SECURE BROWSER CACHE ====================
-        if (isUserAuthenticated) {
-            if ('caches' in window) {
-                caches.keys().then(function(cacheNames) {
-                    return Promise.all(
-                        cacheNames.map(function(cacheName) {
-                            return caches.delete(cacheName);
-                        })
-                    );
-                });
-            }
-        }
-    })();
+    } else {
+        // Hide timer if not logged in
+        const timerDisplay = document.getElementById("session-timer-display");
+        if (timerDisplay) timerDisplay.style.display = "none";
+    }
 </script>
 
 @await RenderSectionAsync("Scripts", required: false)

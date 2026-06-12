@@ -33,11 +33,7 @@ namespace Practice_Project.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            if (User.Identity?.IsAuthenticated == true)
-            {
-                return RedirectToAction("Index", "Dashboard");
-            }
-
+            if (User.Identity.IsAuthenticated) return RedirectToAction("Index", "Dashboard");
             return View();
         }
 
@@ -74,7 +70,7 @@ namespace Practice_Project.Controllers
 
             var authProperties = new AuthenticationProperties
             {
-                IsPersistent = false, // Remember me (cookie persists after browser close)
+                IsPersistent = true, // Remember me (cookie persists after browser close)
              //   ExpiresUtc = DateTimeOffset.UtcNow.AddHours(8) // Session length
             };
 

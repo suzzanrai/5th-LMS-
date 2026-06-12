@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Practice_Project.Data;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace Practice_Project.Controllers
 {
+    [Authorize]
     public class PayController : Controller
     {
         private readonly LibraryDbContext _context;

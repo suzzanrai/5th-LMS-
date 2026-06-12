@@ -15,11 +15,12 @@
 
 <h3>Sign In</h3>
 
-<form asp-action="Login" method="post" id="loginForm">
+<form asp-action="Login" method="post" id="loginForm" autocomplete="off">
     <div class="mb-3">
         <label class="form-label">Email Address</label>
         <input type="email" name="email" id="emailInput" class="form-control"
-               placeholder="admin@example.com" required autofocus />
+               placeholder="admin@example.com" required autofocus
+               autocomplete="off" />
         <small class="text-danger" id="emailTimeoutWarning" style="display: none;">
             Session expired. Please re-enter your email.
         </small>
@@ -28,10 +29,11 @@
     <div class="mb-3">
         <label class="form-label">Password</label>
         <input type="password" name="password" id="passwordInput" class="form-control"
-               placeholder="Enter your password" required />
+               placeholder="Enter your password" required
+               autocomplete="new-password" />
     </div>
 
-    <button type="submit" class="btn btn-login">Sign In</button>
+    <button type="submit" class="btn btn-login" id="loginButton" disabled>Sign In</button>
 </form>
 
 <div class="mt-3 text-center">
@@ -47,56 +49,28 @@
     </small>
 </div>
 
-<!-- Login Form Timeout Security Script -->
 <script>
     (function() {
         const emailInput = document.getElementById('emailInput');
         const passwordInput = document.getElementById('passwordInput');
+        const loginButton = document.getElementById('loginButton');
         const emailTimeoutWarning = document.getElementById('emailTimeoutWarning');
         const loginForm = document.getElementById('loginForm');
 
-        let emailFieldTimeout = null;
-        let emailTimeoutExpired = false;
-        const TIMEOUT_DURATION = 10000;
+        // Submit button only enables when the user ACTUALLY types in both fields
+        function checkInputs() {
+            loginButton.disabled = !(emailInput.value.trim() !== '' && passwordInput.value.trim() !== '');
+        }
 
-        emailInput.addEventListener('input', function() {
-            if (emailFieldTimeout) {
-                clearTimeout(emailFieldTimeout);
-            }
-            emailTimeoutExpired = false;
+        emailInput.addEventListener('input', checkInputs);
+        passwordInput.addEventListener('input', checkInputs);
 
-            if (emailInput.value.trim() !== '') {
-                emailTimeoutWarning.style.display = 'none';
-
-                emailFieldTimeout = setTimeout(function() {
-                    emailTimeoutExpired = true;
-                    emailFieldTimeout = null;
-                }, TIMEOUT_DURATION);
-            }
-        });
-
-        passwordInput.addEventListener('focus', function() {
-            if (emailInput.value.trim() !== '' && emailTimeoutExpired) {
-                emailInput.value = '';
-                emailTimeoutWarning.style.display = 'block';
-                emailInput.focus();
-
-                setTimeout(function() {
-                    emailTimeoutWarning.style.display = 'none';
-                }, 3000);
-
-                emailTimeoutExpired = false;
-            }
-        });
-
-        emailInput.addEventListener('focus', function() {
-            if (emailFieldTimeout) {
-                clearTimeout(emailFieldTimeout);
-                emailFieldTimeout = null;
-            }
-            emailTimeoutExpired = false;
-            emailTimeoutWarning.style.display = 'none';
-        });
+        // Clear any browser auto-filled values on page load (forces user interaction)
+        setTimeout(() => {
+            emailInput.value = '';
+            passwordInput.value = '';
+            loginButton.disabled = true;
+        }, 10);
 
         loginForm.addEventListener('submit', function(e) {
             if (emailInput.value.trim() === '') {
@@ -104,10 +78,6 @@
                 emailTimeoutWarning.textContent = 'Email field is empty. Please enter your email.';
                 emailTimeoutWarning.style.display = 'block';
                 emailInput.focus();
-
-                setTimeout(function() {
-                    emailTimeoutWarning.style.display = 'none';
-                }, 3000);
             }
         });
     })();

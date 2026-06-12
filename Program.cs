@@ -21,10 +21,12 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     {
         options.LoginPath = "/Account/Login";
         options.AccessDeniedPath = "/Account/AccessDenied";
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(30); // Session timeout: 30 minutes
-        options.SlidingExpiration = true; // Reset timeout on each activity
-        options.Cookie.HttpOnly = true; // Prevent JavaScript access to cookie
-        options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // HTTPS only
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(3);
+        options.SlidingExpiration = true;
+        options.Cookie.HttpOnly = true;
+        options.Cookie.SameSite = SameSiteMode.Lax;
+        options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+
     });
 
 builder.Services.AddAuthorization(); // Explicitly added (good practice)
@@ -50,7 +52,7 @@ using (var scope = app.Services.CreateScope())
     // Seed default admin user
     var sha256 = System.Security.Cryptography.SHA256.Create();
     var hashBytes = sha256.ComputeHash(System.Text.Encoding.UTF8.GetBytes("admin"));
-    var hash = Convert.ToHexString(hashBytes).ToLower();
+    var hash = Convert.ToBase64String(hashBytes);
 
     if (!db.Set<Practice_Project.Entities.User>().Any(u => u.Email == "admin@admin.com"))
     {

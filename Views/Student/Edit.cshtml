@@ -93,6 +93,7 @@
 
 <div class="form-card">
     <form asp-action="Edit" asp-route-id="@Model.StudentId" method="post">
+        @Html.AntiForgeryToken()
         <input type="hidden" asp-for="StudentId" />
         <div class="mb-3"><span class="badge bg-light text-dark fs-6 px-3 py-2">@Model.RollNumberDisplay</span></div>
 

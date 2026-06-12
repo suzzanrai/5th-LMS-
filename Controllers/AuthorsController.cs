@@ -1,5 +1,6 @@
 
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Practice_Project.Data;
@@ -166,6 +167,7 @@ namespace Practice_Project.Controllers
     //     }
     // }
     
+     [Authorize]
      public class AuthorsController : Controller
     {
         private readonly IAuthorServices _authorService;

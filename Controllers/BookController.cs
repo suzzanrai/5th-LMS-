@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -8,6 +9,7 @@ using Practice_Project.Services;
 
 namespace Practice_Project.Controllers
 {
+    [Authorize]
     public class BooksController : Controller
     {
         private readonly IBookServices _bookService;
