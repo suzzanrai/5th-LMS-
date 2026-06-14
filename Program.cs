@@ -21,7 +21,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     {
         options.LoginPath = "/Account/Login";
         options.AccessDeniedPath = "/Account/AccessDenied";
-        options.ExpireTimeSpan = TimeSpan.FromSeconds(10); // Session timeout: 30 minutes
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(30); // Session timeout: 30 minutes
         options.SlidingExpiration = true; // Reset timeout on each activity
         options.Cookie.HttpOnly = true; // Prevent JavaScript access to cookie
         options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // HTTPS only
@@ -59,6 +59,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Account}/{action=Login}/{id?}");
+    pattern: "{controller=Account}/{action=Index}/{id?}");
 
 app.Run();

@@ -4,62 +4,194 @@
     ViewData["Title"] = "Book Issues";
 }
 
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2 class="text-success fw-bold">Book Issue Management</h2>
+<style>
+    .page-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 24px;
+    }
 
-        
-        <form asp-action="Index" method="get" class="d-flex align-items-center gap-1">
-            <input class="form-control"
+    .page-title {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1a1d2e;
+    }
+
+    .page-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .view-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 24px;
+    }
+
+    .search-input {
+        width: 300px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 8px 12px;
+        font-size: 0.875rem;
+    }
+
+    .search-input:focus {
+        border-color: #0018a8;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(0, 24, 168, 0.08);
+    }
+
+    .btn-app-primary {
+        background: #0018a8;
+        color: #ffffff;
+        border: 1px solid #0018a8;
+        border-radius: 8px;
+        padding: 8px 20px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .btn-app-primary:hover {
+        background: #0015d4;
+        border-color: #0015d4;
+        color: #ffffff;
+    }
+
+    .btn-app-secondary {
+        background: #ffffff;
+        color: #1a1d2e;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 8px 16px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .btn-return {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border: 1px solid #f59e0b;
+        color: #92400e;
+        background: rgba(245, 158, 11, 0.1);
+        border-radius: 8px;
+        padding: 7px 12px;
+        font-size: 0.82rem;
+        font-weight: 700;
+        text-decoration: none;
+    }
+
+    .app-table {
+        width: 100%;
+        margin: 0;
+    }
+
+    .app-table thead {
+        background: #f8fafc;
+    }
+
+    .app-table th {
+        padding: 12px 16px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #64748b;
+        border-bottom: 1px solid #e2e8f0;
+        white-space: nowrap;
+    }
+
+    .app-table td {
+        padding: 14px 16px;
+        font-size: 0.875rem;
+        color: #1a1d2e;
+        border-bottom: 1px solid #f1f5f9;
+        vertical-align: middle;
+    }
+
+    .app-table tbody tr:hover {
+        background: #f8fafc;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        border-radius: 999px;
+        padding: 4px 10px;
+        font-size: 0.75rem;
+        font-weight: 700;
+    }
+
+    .status-issued {
+        background: rgba(0, 24, 168, 0.08);
+        color: #0018a8;
+    }
+
+    .status-returned {
+        background: rgba(22, 163, 74, 0.1);
+        color: #16a34a;
+    }
+</style>
+
+<div class="page-header">
+    <h1 class="page-title">Book Issues</h1>
+    <div class="page-actions">
+        <form asp-action="Index" method="get" class="d-flex align-items-center gap-2">
+            <input class="search-input"
                    type="text"
                    name="searchString"
                    placeholder="Search by student or book title"
                    aria-label="Search"
-                   value="@ViewData["CurrentFilter"]"/>
+                   value="@ViewData["CurrentFilter"]" />
 
-            <button class="btn btn-outline-success" type="submit">
-                Search
-            </button>
-      
-
-            <a asp-action="Index" class="btn btn-outline-success">
-                Reset
-            </a>
+            <button class="btn-app-secondary" type="submit">Search</button>
+            <a asp-action="Index" class="btn-app-secondary">Reset</a>
         </form>
-        
-        
-        <a asp-action="Create" class="btn btn-success btn-lg">
-            Issue Book
+
+        <a asp-action="Create" class="btn-app-primary">
+            <i class="bx bx-plus"></i> Issue Book
         </a>
     </div>
+</div>
 
-    @if (TempData["Success"] != null)
-    {
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            @TempData["Success"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    }
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
 
-    @if (TempData["Error"] != null)
-    {
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            @TempData["Error"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    }
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
 
-    @if (TempData["Info"] != null)
-    {
-        <div class="alert alert-info alert-dismissible fade show" role="alert">
-            @TempData["Info"]
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
-    }
+@if (TempData["Info"] != null)
+{
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        @TempData["Info"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+}
 
+<div class="view-card">
     <div class="table-responsive">
-        <table class="table table-bordered table-striped table-hover">
-            <thead class="table-dark">
+        <table class="table app-table">
+            <thead>
                 <tr>
                     <th>Book</th>
                     <th>Student</th>
@@ -67,7 +199,7 @@
                     <th>Due Date</th>
                     <th>Status</th>
                     <th>Fine</th>
-                    <th>Retrun Date</th>
+                    <th class="text-end">Return Date</th>
                 </tr>
             </thead>
             <tbody>
@@ -82,18 +214,21 @@
                     foreach (var item in Model)
                     {
                         <tr>
-                            <td><strong>@item.Book.Title</strong><br /><small>by @item.Book.Author?.Name</small></td>
+                            <td>
+                                <strong>@item.Book.Title</strong><br />
+                                <small class="text-muted">by @item.Book.Author?.Name</small>
+                            </td>
                             <td>@item.Student.Name</td>
-                            <td>@item.IssueDate</td>
-                            <td>@item.DueDate</td>
+                            <td>@item.IssueDate.ToString("dd MMM yyyy")</td>
+                            <td>@item.DueDate.ToString("dd MMM yyyy")</td>
                             <td>
                                 @if (item.Status == "Returned")
                                 {
-                                    <span class="badge bg-success">Returned</span>
+                                    <span class="status-badge status-returned">Returned</span>
                                 }
                                 else
                                 {
-                                    <span class="badge bg-primary">Issued</span>
+                                    <span class="status-badge status-issued">Issued</span>
                                 }
                             </td>
                             <td>
@@ -106,11 +241,11 @@
                                     <span class="text-success">-</span>
                                 }
                             </td>
-                            <td>
+                            <td class="text-end">
                                 @if (item.Status == "Issued")
                                 {
-                                    <a asp-action="Return" asp-route-id="@item.Id" class="btn btn-warning btn-sm">
-                                        Return Book
+                                    <a asp-action="Return" asp-route-id="@item.Id" class="btn-return">
+                                        <i class="bx bx-undo"></i> Return Book
                                     </a>
                                 }
                                 else

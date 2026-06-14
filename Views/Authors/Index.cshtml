@@ -2,63 +2,198 @@
 @{
     ViewData["Title"] = "Authors";
 }
-<div class="container mt-4">
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="text-success fw-bold">Authors Management</h2>
-  
-    @*adding search *@
-    
-    
-    <form asp-action="Index" method="get" class="d-flex align-items-center gap-1">
-        <input class="form-control"
-               type="text"
-               name="searchString"
-               placeholder="Search by author name"
-               aria-label="Search"
-               value="@ViewData["CurrentFilter"]"/>
 
-        <button class="btn btn-outline-success" type="submit">
-            Search
-        </button>
-      
+<style>
+    .page-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 24px;
+    }
 
-        <a asp-action="Index" class="btn btn-outline-success">
-            Reset
+    .page-title {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1a1d2e;
+    }
+
+    .page-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .view-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 24px;
+    }
+
+    .search-input {
+        width: 260px;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 8px 12px;
+        font-size: 0.875rem;
+    }
+
+    .search-input:focus {
+        border-color: #0018a8;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(0, 24, 168, 0.08);
+    }
+
+    .btn-app-primary {
+        background: #0018a8;
+        color: #ffffff;
+        border: 1px solid #0018a8;
+        border-radius: 8px;
+        padding: 8px 20px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .btn-app-primary:hover {
+        background: #0015d4;
+        border-color: #0015d4;
+        color: #ffffff;
+    }
+
+    .btn-app-secondary {
+        background: #ffffff;
+        color: #1a1d2e;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 8px 16px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .btn-icon {
+        width: 34px;
+        height: 34px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        border: 1px solid #e2e8f0;
+        background: #ffffff;
+        text-decoration: none;
+        font-size: 1.05rem;
+    }
+
+    .btn-icon.edit {
+        color: #0018a8;
+    }
+
+    .btn-icon.delete {
+        color: #dc3545;
+    }
+
+    .app-table {
+        width: 100%;
+        margin: 0;
+    }
+
+    .app-table thead {
+        background: #f8fafc;
+    }
+
+    .app-table th {
+        padding: 12px 16px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #64748b;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .app-table td {
+        padding: 14px 16px;
+        font-size: 0.875rem;
+        color: #1a1d2e;
+        border-bottom: 1px solid #f1f5f9;
+        vertical-align: middle;
+    }
+
+    .app-table tbody tr:hover {
+        background: #f8fafc;
+    }
+
+    .empty-state {
+        padding: 28px;
+        text-align: center;
+        color: #64748b;
+        font-size: 0.9rem;
+        border: 1px dashed #e2e8f0;
+        border-radius: 12px;
+        background: #f8fafc;
+    }
+</style>
+
+<div class="page-header">
+    <h1 class="page-title">Authors</h1>
+    <div class="page-actions">
+        <form asp-action="Index" method="get" class="d-flex align-items-center gap-2">
+            <input class="search-input"
+                   type="text"
+                   name="searchString"
+                   placeholder="Search by author name"
+                   aria-label="Search"
+                   value="@ViewData["CurrentFilter"]" />
+
+            <button class="btn-app-secondary" type="submit">Search</button>
+            <a asp-action="Index" class="btn-app-secondary">Reset</a>
+        </form>
+
+        <a asp-action="Create" class="btn-app-primary">
+            <i class="bx bx-plus"></i> Add New
         </a>
-    </form>  
-    
-    
-    <a asp-action="Create" class="btn btn-success btn-lg">
-        Add New Authors
-    </a>
+    </div>
 </div>
-@if (!Model.Any())
-{
-    <p>No authors found.</p>
-}
-else
-{
-    <table class="table table-bordered table-striped table-hover">
-        <thead class="table-dark">
-        <tr >
-            <th>Name</th>
-            <th>Biography</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        @foreach (var author in Model)
-        {
-            <tr>
-                <td>@author.Name</td>
-                <td>@(string.IsNullOrEmpty(author.Biography) ? "No biography" : author.Biography)</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@author.AuthorId" class="btn btn-sm btn-primary">Edit</a>
-                    <a asp-action="Delete" asp-route-id="@author.AuthorId" class="btn btn-sm btn-danger">Delete</a>
-                </td>
-            </tr>
-        }
-        </tbody>
-    </table>
-}
+
+<div class="view-card">
+    @if (!Model.Any())
+    {
+        <div class="empty-state">No authors found.</div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table app-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Biography</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var author in Model)
+                    {
+                        <tr>
+                            <td class="fw-semibold">@author.Name</td>
+                            <td>@(string.IsNullOrEmpty(author.Biography) ? "No biography" : author.Biography)</td>
+                            <td class="text-end">
+                                <a asp-action="Edit" asp-route-id="@author.AuthorId" class="btn-icon edit" aria-label="Edit author">
+                                    <i class="bx bx-edit"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@author.AuthorId" class="btn-icon delete" aria-label="Delete author">
+                                    <i class="bx bx-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
 </div>

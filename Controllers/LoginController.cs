@@ -22,6 +22,13 @@ namespace Practice_Project.Controllers
             _context = context;
         }
 
+        // GET: /Account/Index → redirect to Login
+        [HttpGet]
+        public IActionResult Index()
+        {
+            return RedirectToAction("Login");
+        }
+
         // GET: /Account/Login
         [HttpGet]
         public IActionResult Login()

@@ -25,202 +25,244 @@
 
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
 
     <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #f4f1e8 0%, #e8e3d8 100%);
-            color: #333;
+            font-family: 'Inter', sans-serif;
+            background: #ebeef1;
+            color: #1a1d2e;
             min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            position: relative;
         }
 
-        body::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background-size: cover;
-            background-position: center;
-            opacity: 1;
-            z-index: -1;
-        }
-
-        .top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 40px;
-            background: #fff;
-            height: 70px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        /* ===== SIDEBAR ===== */
+        .sidebar {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            z-index: 1000;
+            bottom: 0;
+            width: 240px;
+            background: #0018a8;
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            overflow-y: auto;
+            z-index: 1100;
         }
 
-        .logo {
-            font-size: 24px;
-            font-weight: 600;
-            color: #1d1e1d;
-        }
-
-        .top-center {
-            font-size: 1.15rem;
-            color: #333;
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            white-space: nowrap;
-        }
-
-        .profile-top {
+        .sidebar-logo {
             display: flex;
             align-items: center;
             gap: 12px;
-            transition: all 0.3s ease;
+            text-decoration: none;
+            padding: 8px 12px 20px 12px;
         }
 
-        .profile-top:hover {
-            transform: translateY(-2px);
+        .sidebar-logo i {
+            color: #ffffff;
+            font-size: 1.8rem;
         }
 
-        .profile-avatar-large {
-            width: 55px;
-            height: 55px;
-            font-size: 26px;
-            background-color: #0b0b95;
-            color: white;
-            border-radius: 50%;
+        .sidebar-logo-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+
+        .sidebar-logo-text span:first-child {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .sidebar-logo-text span:last-child {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.75);
+            font-weight: 500;
+        }
+
+        .sidebar-divider {
+            height: 1px;
+            background-color: rgba(255,255,255,0.25);
+            margin: 0 12px 16px 12px;
+        }
+
+        .sidebar a:not(.logout-btn):not(.sidebar-logo) {
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            box-shadow: 0 4px 10px rgba(11, 11, 149, 0.3);
-            transition: all 0.3s ease;
+            gap: 12px;
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            transition: all 0.15s;
         }
 
-        .profile-avatar-large:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 15px rgba(11, 11, 149, 0.4);
+        .sidebar a i {
+            font-size: 1.2rem;
         }
 
-        .profile-info .small {
-            font-size: 0.85rem;
-            color: #666;
-            margin-bottom: 0;
+        .sidebar a:hover:not(.logout-btn):not(.sidebar-logo) {
+            background: rgba(255, 255, 255, 0.10);
+            color: #ffffff;
         }
 
-        .profile-info .fw-bold {
-            font-size: 1.1rem;
-            color: #333;
+        .sidebar a.active {
+            background: rgba(255, 255, 255, 0.18);
+            color: #ffffff;
+            font-weight: 600;
         }
 
-        /* Logout button style */
+        .sidebar-spacer {
+            flex: 1;
+        }
+
+        /* ===== LOGOUT BUTTON ===== */
         .logout-btn {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 80%;
-            margin: 130px auto 0px ; /* Big top margin to separate */
-            padding: 12px 20px;
+            gap: 8px;
+            padding: 12px;
             background: transparent;
-            border: 2px solid #dc3545;
-            color: #dc3545;
+            border: 1.5px solid rgba(255,255,255,0.6);
+            color: #fff;
             border-radius: 10px;
             font-weight: 600;
-            font-size: 16px;
-         
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            width: 100%;
+            margin-top: 8px;
         }
 
         .logout-btn:hover {
-            background: #dc3545;
-            color: white;
-            transform: translateY(-3px);
-            box-shadow: 0 6px 15px rgba(220, 53, 69, 0.4);
+            background: rgba(255,255,255,0.12);
+            border-color: #fff;
         }
 
-        .main-container {
+        /* ===== TOP BAR ===== */
+        .top {
             display: flex;
-            flex: 1;
-            margin-top: 70px;
-            margin-left: 250px;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 40px;
+            background: #ffffff;
+            height: 80px;
+            border-bottom: 1px solid #e2e8f0;
+            position: fixed;
+            top: 0;
+            left: 240px;
+            width: calc(100% - 240px);
+            z-index: 1000;
         }
 
-        .sidebar {
-            position: fixed;
-            top: 70px;
-            left: 0;
-            bottom: 0;
-            width: 250px;
-            background: rgba(255, 255, 255, 1);
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-            padding: 30px 0;
+        .top-time {
+            display: flex;
+            align-items: center;
+            color: #252627;
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+
+        .top-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .top-icon-btn {
+            color: #64748b;
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .top-icon-btn:hover {
+            color: #0018a8;
+        }
+
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .profile-avatar {
+            width: 38px;
+            height: 38px;
+            background: #0018a8;
+            color: #ffffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .profile-name {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            overflow-y: auto;
-            z-index: 900;
+            line-height: 1.2;
         }
 
-        .sidebar a:not(.logout-btn) {
+        .profile-name .hello {
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+
+        .profile-name .name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #1a1d2e;
+        }
+
+        /* ===== MAIN LAYOUT ===== */
+        .main-container {
             display: flex;
-            align-items: center;
-            color: #333;
-            text-decoration: none;
-            padding: 10px 15px;
-            margin: 5px 0; /* Default margin for all normal links */
-            width: 80%;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            font-size: 16px;
-            font-weight: 500;
-        }
-
-        .sidebar a .icon {
-            margin-right: 15px;
-            font-size: 20px;
-        }
-
-        .sidebar a:hover:not(.logout-btn),
-        .sidebar a.active {
-            background-color: #1e3c72;
-            color: #fff;
+            margin-top: 50px;
+            margin-left: 240px;
+            min-height: calc(100vh - 80px);
         }
 
         .content {
             flex: 1;
-            padding: 20px 10px;
-            overflow-y: auto;
+            padding: 10px 10px;
             width: 100%;
         }
 
         .main-content {
-            background: rgba(255, 255, 255, 0.82);
-            padding: 10px;
+            background: #ffffff;
+            padding: 36px;
             max-width: 1400px;
             width: 100%;
             margin: 0 auto;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            box-sizing: border-box;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
         }
 
+        /* ===== FOOTER ===== */
         .footer {
             padding: 20px;
-            background: #2c3e50;
-            color: #fff;
+            background: #0018a8;
+            color: rgba(255,255,255,0.8);
             text-align: center;
-            font-size: 14px;
+            font-size: 13px;
+            margin-left: 240px;
         }
 
         .footer a {
-            color: #d88b5c;
+            color: rgba(255,255,255,0.9);
             text-decoration: none;
         }
 
@@ -231,79 +273,87 @@
 </head>
 <body>
 
-<div class="top">
-    <div class="logo">Library Management System</div>
-
-    <div class="top-center">
-         @formattedTime
-    </div>
-
-    <div class="profile-top">
-        <div class="profile-avatar-large">
-            @firstLetter
+<div class="sidebar">
+    <a class="sidebar-logo" asp-controller="Dashboard" asp-action="Index">
+        <i class='bx bx-book-open'></i>
+        <div class="sidebar-logo-text">
+            <span>Library</span>
+            <span>Management System</span>
         </div>
-        <div class="profile-info">
-            <div class="fw-medium">Hello,</div>
-            <div class="fw-bold">@firstName</div>
+    </a>
+    <div class="sidebar-divider"></div>
+
+    @if (User.Identity.IsAuthenticated)
+    {
+        <a asp-controller="Dashboard" asp-action="Index"
+           class="@(Context.Request.Path.StartsWithSegments("/Dashboard") ? "active" : "")">
+            <i class='bx bxs-dashboard'></i> <span>Dashboard</span>
+        </a>
+
+        <a asp-controller="Student" asp-action="Index"
+           class="@(Context.Request.Path.StartsWithSegments("/Student") ? "active" : "")">
+            <i class='bx bxs-graduation'></i> <span>Students</span>
+        </a>
+
+        <a asp-controller="Authors" asp-action="Index"
+           class="@(Context.Request.Path.StartsWithSegments("/Authors") ? "active" : "")">
+            <i class='bx bx-edit-alt'></i> <span>Authors</span>
+        </a>
+
+        <a asp-controller="Categories" asp-action="Index"
+           class="@(Context.Request.Path.StartsWithSegments("/Categories") ? "active" : "")">
+            <i class='bx bx-category'></i> <span>Categories</span>
+        </a>
+
+        <a asp-controller="Books" asp-action="Index"
+           class="@(Context.Request.Path.StartsWithSegments("/Books") ? "active" : "")">
+            <i class='bx bx-book'></i> <span>Books</span>
+        </a>
+
+        <a asp-controller="BookIssue" asp-action="Index"
+           class="@(Context.Request.Path.StartsWithSegments("/BookIssue") ? "active" : "")">
+            <i class='bx bx-transfer'></i> <span>Book Issue</span>
+        </a>
+
+        <a asp-controller="Pay" asp-action="Index"
+           class="@(Context.Request.Path.StartsWithSegments("/Pay") ? "active" : "")">
+            <i class='bx bx-receipt'></i> <span>Pay / Fine</span>
+        </a>
+
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-controller="Auth" asp-action="Register"
+               class="@(Context.Request.Path.StartsWithSegments("/Auth/Register") ? "active" : "")">
+                <i class='bx bx-user-plus'></i> <span>Register Staff</span>
+            </a>
+        }
+
+        <div class="sidebar-spacer"></div>
+
+        <button type="button" id="logoutBtn" class="logout-btn" data-bs-toggle="modal" data-bs-target="#logoutConfirmModal">
+            <i class='bx bx-log-out'></i> <span>Logout</span>
+        </button>
+    }
+</div>
+
+<div class="top">
+    <div class="top-time">
+        <span>@formattedTime</span>
+    </div>
+    <div class="top-right">
+        @* <div class="top-icon-btn"><i class='bx bx-bell'></i></div> *@
+        @* <div class="top-icon-btn"><i class='bx bx-help-circle'></i></div> *@
+        <div class="profile-section">
+            <div class="profile-avatar">@firstLetter</div>
+            <div class="profile-name">
+                <span class="hello">Hello,</span>
+                <span class="name">@firstName</span>
+            </div>
         </div>
     </div>
 </div>
 
 <div class="main-container">
-    <div class="sidebar">
-        @if (User.Identity.IsAuthenticated)
-        {
-            <a asp-controller="Dashboard" asp-action="Index"
-               class="@(Context.Request.Path.StartsWithSegments("/Dashboard") ? "active" : "")">
-                <span class="icon"></span> Dashboard
-            </a>
-
-            <a asp-controller="Student" asp-action="Index"
-               class="@(Context.Request.Path.StartsWithSegments("/Student") ? "active" : "")">
-                <span class="icon"></span> Student
-            </a>
-
-            <a asp-controller="Authors" asp-action="Index"
-               class="@(Context.Request.Path.StartsWithSegments("/Authors") ? "active" : "")">
-                <span class="icon"></span> Authors
-            </a>
-
-            <a asp-controller="Categories" asp-action="Index"
-               class="@(Context.Request.Path.StartsWithSegments("/Categories") ? "active" : "")">
-                <span class="icon"></span> Categories
-            </a>
-
-            <a asp-controller="Books" asp-action="Index"
-               class="@(Context.Request.Path.StartsWithSegments("/Books") ? "active" : "")">
-                <span class="icon"></span> Books
-            </a>
-
-            <a asp-controller="BookIssue" asp-action="Index"
-               class="@(Context.Request.Path.StartsWithSegments("/BookIssue") ? "active" : "")">
-                <span class="icon"></span> Book Issue
-            </a>
-
-            <a asp-controller="Pay" asp-action="Index"
-               class="@(Context.Request.Path.StartsWithSegments("/Pay") ? "active" : "")">
-                <span class="icon"></span> Fine
-            </a>
-
-            @if (User.IsInRole("Admin"))
-            {
-                <a asp-controller="Auth" asp-action="Register"
-                   class="@(Context.Request.Path.StartsWithSegments("/Auth/Register") ? "active" : "")">
-                    <span class="icon"></span> Register Staff
-                </a>
-            }
-
-            <!-- Logout button - separated and at the bottom -->
-
-            <button type="button" id="logoutBtn" class="logout-btn" data-bs-toggle="modal" data-bs-target="#logoutConfirmModal">
-                <span class="me-2">⬅️</span> Logout
-            </button>
-        }
-    </div>
-
     <div class="content">
         <div class="main-content">
             @RenderBody()
@@ -368,14 +418,12 @@
 <script>
     (function() {
         const isUserAuthenticated = @(User.Identity?.IsAuthenticated.ToString().ToLower());
-        
+
         // ==================== SESSION TIMEOUT MANAGEMENT ====================
-        // Session timeout: 30 minutes (from Program.cs configuration)
-        // Warning timeout: 5 minutes before expiration (25 minutes of inactivity)
-        const SESSION_DURATION = 10 * 60 * 1000; // 30 minutes in milliseconds
-        const WARNING_TIME = 2 * 60 * 1000; // 5 minutes before timeout
-        const CHECK_INTERVAL = 1000; // Check every 1 second
-        
+        const SESSION_DURATION = 30 * 60 * 1000;
+        const WARNING_TIME = 5 * 60 * 1000;
+        const CHECK_INTERVAL = 1000;
+
         let sessionTimeoutId = null;
         let warningTimeoutId = null;
         let countdownIntervalId = null;
@@ -383,21 +431,18 @@
         let sessionWarningShown = false;
 
         function resetSessionTimer() {
-            // Clear previous timers
             if (sessionTimeoutId) clearTimeout(sessionTimeoutId);
             if (warningTimeoutId) clearTimeout(warningTimeoutId);
-            
+
             lastActivityTime = Date.now();
             sessionWarningShown = false;
 
-            // Set warning to show 5 minutes before timeout
             warningTimeoutId = setTimeout(function() {
                 if (isUserAuthenticated && !sessionWarningShown) {
                     showSessionTimeoutWarning();
                 }
             }, SESSION_DURATION - WARNING_TIME);
 
-            // Set actual logout after 30 minutes
             sessionTimeoutId = setTimeout(function() {
                 if (isUserAuthenticated) {
                     window.location.href = '@Url.Action("Logout", "Account")';
@@ -409,44 +454,39 @@
             sessionWarningShown = true;
             const modal = new bootstrap.Modal(document.getElementById('sessionTimeoutModal'));
             modal.show();
-            
-            // Start countdown timer
-            let timeRemaining = Math.ceil(WARNING_TIME / 1000); // Convert to seconds
-            
+
+            let timeRemaining = Math.ceil(WARNING_TIME / 1000);
+
             countdownIntervalId = setInterval(function() {
                 timeRemaining--;
                 const minutes = Math.floor(timeRemaining / 60);
                 const seconds = timeRemaining % 60;
                 const display = minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
-                
+
                 document.getElementById('timeoutCountdown').textContent = display;
-                
+
                 if (timeRemaining <= 0) {
                     clearInterval(countdownIntervalId);
                 }
             }, 1000);
         }
 
-        // Track user activity to reset session timer
         const activityEvents = ['mousedown', 'keydown', 'scroll', 'touchstart', 'click'];
-        
+
         activityEvents.forEach(function(event) {
             document.addEventListener(event, function() {
                 if (isUserAuthenticated && (Date.now() - lastActivityTime) > 60000) {
-                    // Reset timer only if 1+ minute has passed since last activity
                     resetSessionTimer();
                 }
             }, true);
         });
 
-        // Initialize session timeout on page load
         window.addEventListener('load', function() {
             if (isUserAuthenticated) {
                 resetSessionTimer();
             }
         });
 
-        // Global functions for modal buttons
         window.extendSession = function() {
             if (countdownIntervalId) clearInterval(countdownIntervalId);
             resetSessionTimer();
@@ -459,24 +499,19 @@
 
         // ==================== LOGOUT CONFIRMATION ====================
         document.addEventListener('DOMContentLoaded', function() {
-            // Prevent accidental logout via keyboard shortcut or form submission
             const logoutBtn = document.getElementById('logoutBtn');
             if (logoutBtn) {
                 logoutBtn.addEventListener('click', function(e) {
-                    // Modal will handle the confirmation
                     console.log('Logout initiated - confirmation required');
                 });
             }
         });
 
         // ==================== BACK BUTTON PREVENTION ====================
-        // Manage browser history to prevent unauthorized back navigation
         window.addEventListener('load', function() {
             if (isUserAuthenticated) {
-                // When user is logged in, add history states to prevent going back to login
                 history.pushState(null, null, location.href);
-                
-                // Prevent back button from working after logout
+
                 window.addEventListener('popstate', function() {
                     history.pushState(null, null, location.href);
                 });
@@ -484,24 +519,18 @@
         });
 
         // ==================== PREVENT DASHBOARD ACCESS WHEN LOGGED OUT ====================
-        // This script runs when page loads
         window.addEventListener('load', function() {
-            // If user is not authenticated, prevent back button to dashboard
             if (!isUserAuthenticated) {
-                // Replace history to prevent going back to authenticated pages
                 history.replaceState(null, null, location.href);
-                
-                // Block popstate when not authenticated
+
                 window.addEventListener('popstate', function(event) {
-                    // Don't allow going back to authenticated pages
-                    if (document.referrer && (document.referrer.includes('/Dashboard') || 
+                    if (document.referrer && (document.referrer.includes('/Dashboard') ||
                         document.referrer.includes('/Student') ||
                         document.referrer.includes('/Authors') ||
                         document.referrer.includes('/Categories') ||
                         document.referrer.includes('/Books') ||
                         document.referrer.includes('/BookIssue') ||
                         document.referrer.includes('/Pay'))) {
-                        // Redirect to login instead
                         window.location.href = '@Url.Action("Login", "Account")';
                     }
                 });
@@ -509,9 +538,7 @@
         });
 
         // ==================== SECURE BROWSER CACHE ====================
-        // Prevent caching of authenticated pages
         if (isUserAuthenticated) {
-            // Add cache-busting to prevent viewing cached authenticated content
             if ('caches' in window) {
                 caches.keys().then(function(cacheNames) {
                     return Promise.all(

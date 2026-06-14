@@ -1,8 +1,104 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<style>
+    .page-header {
+        margin-bottom: 24px;
+    }
+
+    .page-title {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1a1d2e;
+    }
+
+    .page-subtitle {
+        margin: 4px 0 0;
+        font-size: 0.85rem;
+        color: #64748b;
+    }
+
+    .welcome-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 36px;
+        text-align: center;
+    }
+
+    .welcome-icon {
+        font-size: 3.5rem;
+        color: #0018a8;
+        margin-bottom: 16px;
+    }
+
+    .welcome-title {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: #1a1d2e;
+        margin-bottom: 8px;
+    }
+
+    .welcome-text {
+        font-size: 0.95rem;
+        color: #64748b;
+        max-width: 500px;
+        margin: 0 auto 24px;
+        line-height: 1.6;
+    }
+
+    .quick-links {
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .quick-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #0018a8;
+        color: #ffffff;
+        border: none;
+        border-radius: 8px;
+        padding: 12px 24px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: background 0.15s ease;
+    }
+
+    .quick-link:hover {
+        background: #0015d4;
+        color: #ffffff;
+    }
+
+    .quick-link i {
+        font-size: 1.15rem;
+    }
+</style>
+
+<div class="page-header">
+    <h1 class="page-title">Home</h1>
+    <p class="page-subtitle">Welcome to the Library Management System</p>
+</div>
+
+<div class="welcome-card">
+    <div class="welcome-icon"><i class="bx bx-book-open"></i></div>
+    <h2 class="welcome-title">Library Management System</h2>
+    <p class="welcome-text">
+        Manage your library's books, students, authors, categories, and book issuance records all in one place.
+        Use the sidebar to navigate between different sections.
+    </p>
+    <div class="quick-links">
+        <a asp-controller="Dashboard" asp-action="Index" class="quick-link">
+            <i class="bx bxs-dashboard"></i> Go to Dashboard
+        </a>
+        <a asp-controller="Books" asp-action="Index" class="quick-link">
+            <i class="bx bx-book"></i> Browse Books
+        </a>
+    </div>
 </div>

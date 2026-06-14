@@ -4,89 +4,159 @@
     ViewData["Title"] = "Edit Book";
 }
 
-<h1 class="mb-4">Edit Book</h1>
+<style>
+    .page-header {
+        margin-bottom: 24px;
+    }
 
-<div class="row">
-    <div class="col-md-8">
-        <form asp-action="Edit" asp-route-id="@Model.BookId" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+    .page-title {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1a1d2e;
+    }
 
-            <input type="hidden" asp-for="BookId" />
+    .form-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 24px;
+    }
 
-            <div class="form-group mb-3">
-                <label asp-for="Title" class="control-label"></label>
+    .form-card label {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #64748b;
+        margin-bottom: 4px;
+    }
+
+    .form-card .form-control,
+    .form-card .form-select {
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 10px 14px;
+        font-size: 0.875rem;
+    }
+
+    .form-card .form-control:focus,
+    .form-card .form-select:focus {
+        border-color: #0018a8;
+        box-shadow: 0 0 0 3px rgba(0, 24, 168, 0.08);
+    }
+
+    .field-validation-error,
+    .text-danger {
+        font-size: 0.78rem;
+        color: #dc3545 !important;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 24px;
+    }
+
+    .btn-app-primary {
+        background: #0018a8;
+        color: #ffffff;
+        border: 1px solid #0018a8;
+        border-radius: 8px;
+        padding: 8px 20px;
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+
+    .btn-app-primary:hover {
+        background: #0015d4;
+        border-color: #0015d4;
+        color: #ffffff;
+    }
+
+    .btn-app-secondary {
+        background: #ffffff;
+        color: #1a1d2e;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 8px 20px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-decoration: none;
+    }
+</style>
+
+<div class="page-header">
+    <h1 class="page-title">Edit Book</h1>
+</div>
+
+<div class="form-card">
+    <form asp-action="Edit" asp-route-id="@Model.BookId" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+        <input type="hidden" asp-for="BookId" />
+
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label asp-for="Title" class="form-label"></label>
                 <input asp-for="Title" class="form-control" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
 
-            <div class="form-group mb-3">
-                <label asp-for="ISBN" class="control-label"></label>
+            <div class="col-md-6">
+                <label asp-for="ISBN" class="form-label"></label>
                 <input asp-for="ISBN" class="form-control" placeholder="13 digits only" />
                 <span asp-validation-for="ISBN" class="text-danger"></span>
             </div>
 
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group mb-3">
-                        <label asp-for="PublicationYear" class="control-label"></label>
-                        <input asp-for="PublicationYear" class="form-control" type="number" />
-                        <span asp-validation-for="PublicationYear" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group mb-3">
-                        <label asp-for="PublicationDate" class="control-label"></label>
-                        <input asp-for="PublicationDate" class="form-control" type="date" />
-                        <span asp-validation-for="PublicationDate" class="text-danger"></span>
-                    </div>
-                </div>
+            <div class="col-md-6">
+                <label asp-for="PublicationYear" class="form-label"></label>
+                <input asp-for="PublicationYear" class="form-control" type="number" />
+                <span asp-validation-for="PublicationYear" class="text-danger"></span>
             </div>
 
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group mb-3">
-                        <label asp-for="TotalQuantity" class="control-label"></label>
-                        <input asp-for="TotalQuantity" class="form-control" type="number" />
-                        <span asp-validation-for="TotalQuantity" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group mb-3">
-                        <label asp-for="QuantityAvailable" class="control-label"></label>
-                        <input asp-for="QuantityAvailable" class="form-control" type="number" />
-                        <span asp-validation-for="QuantityAvailable" class="text-danger"></span>
-                    </div>
-                </div>
+            <div class="col-md-6">
+                <label asp-for="PublicationDate" class="form-label"></label>
+                <input asp-for="PublicationDate" class="form-control" type="date" />
+                <span asp-validation-for="PublicationDate" class="text-danger"></span>
             </div>
 
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group mb-3">
-                        <label asp-for="AuthorId" class="control-label">Author</label>
-                        <select asp-for="AuthorId" class="form-control" asp-items="Model.Authors"></select>
-                        <span asp-validation-for="AuthorId" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group mb-3">
-                        <label asp-for="CategoryId" class="control-label">Category</label>
-                        <select asp-for="CategoryId" class="form-control" asp-items="Model.Categories"></select>
-                        <span asp-validation-for="CategoryId" class="text-danger"></span>
-                    </div>
-                </div>
+            <div class="col-md-6">
+                <label asp-for="TotalQuantity" class="form-label"></label>
+                <input asp-for="TotalQuantity" class="form-control" type="number" />
+                <span asp-validation-for="TotalQuantity" class="text-danger"></span>
             </div>
 
-            <div class="form-group mb-3 form-check">
-                <input asp-for="IsActive" class="form-check-input" />
-                <label asp-for="IsActive" class="form-check-label"></label>
+            <div class="col-md-6">
+                <label asp-for="QuantityAvailable" class="form-label"></label>
+                <input asp-for="QuantityAvailable" class="form-control" type="number" />
+                <span asp-validation-for="QuantityAvailable" class="text-danger"></span>
             </div>
 
-            <div class="form-group mt-4">
-                <input type="submit" value="Save Changes" class="btn btn-primary me-2" />
-                <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+            <div class="col-md-6">
+                <label asp-for="AuthorId" class="form-label">Author</label>
+                <select asp-for="AuthorId" class="form-select" asp-items="Model.Authors"></select>
+                <span asp-validation-for="AuthorId" class="text-danger"></span>
             </div>
-        </form>
-    </div>
+
+            <div class="col-md-6">
+                <label asp-for="CategoryId" class="form-label">Category</label>
+                <select asp-for="CategoryId" class="form-select" asp-items="Model.Categories"></select>
+                <span asp-validation-for="CategoryId" class="text-danger"></span>
+            </div>
+
+            <div class="col-12">
+                <div class="form-check">
+                    <input asp-for="IsActive" class="form-check-input" />
+                    <label asp-for="IsActive" class="form-check-label"></label>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <a asp-action="Index" class="btn-app-secondary">Cancel</a>
+            <input type="submit" value="Save Changes" class="btn-app-primary" />
+        </div>
+    </form>
 </div>
 
 @section Scripts {

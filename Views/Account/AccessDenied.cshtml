@@ -3,30 +3,80 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container mt-5 text-center">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="alert alert-danger shadow-lg p-5">
-                <h1 class="display-4 text-danger">
-                    <i class="bi bi-exclamation-triangle-fill"></i> Access Denied
-                </h1>
-                <p class="lead mt-4">
-                    You do not have permission to access this page.
-                </p>
-                <hr />
-                <p>
-                    If you believe this is an error, please contact the administrator.
-                </p>
+<style>
+    .access-card {
+        max-width: 520px;
+        margin: 40px auto;
+        text-align: center;
+    }
 
-                <div class="mt-4">
-                    <a asp-action="Index" asp-controller="Home" class="btn btn-primary btn-lg me-3">
-                        Go to Home
-                    </a>
-                    <a asp-action="Logout" asp-controller="Account" class="btn btn-outline-secondary btn-lg">
-                        Logout
-                    </a>
-                </div>
-            </div>
-        </div>
+    .access-icon {
+        font-size: 3.5rem;
+        color: #dc3545;
+        margin-bottom: 16px;
+    }
+
+    .access-title {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: #1a1d2e;
+        margin-bottom: 8px;
+    }
+
+    .access-text {
+        font-size: 0.9rem;
+        color: #64748b;
+        margin-bottom: 8px;
+    }
+
+    .access-actions {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 24px;
+    }
+
+    .btn-app-primary {
+        background: #0018a8;
+        color: #ffffff;
+        border: 1px solid #0018a8;
+        border-radius: 8px;
+        padding: 10px 24px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: background 0.15s ease;
+    }
+
+    .btn-app-primary:hover {
+        background: #0015d4;
+        color: #ffffff;
+    }
+
+    .btn-app-secondary {
+        background: #ffffff;
+        color: #1a1d2e;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 10px 24px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-decoration: none;
+    }
+</style>
+
+<div class="access-card">
+    <div class="access-icon"><i class="bx bx-error-circle"></i></div>
+    <h1 class="access-title">Access Denied</h1>
+    <p class="access-text">You do not have permission to access this page.</p>
+    <p class="access-text">If you believe this is an error, please contact the administrator.</p>
+
+    <div class="access-actions">
+        <a asp-action="Index" asp-controller="Home" class="btn-app-primary">
+            <i class="bx bx-home"></i> Go to Home
+        </a>
+        <a asp-action="Logout" asp-controller="Account" class="btn-app-secondary">
+            <i class="bx bx-log-out"></i> Logout
+        </a>
     </div>
 </div>

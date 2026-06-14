@@ -3,152 +3,210 @@
 @{
     ViewData["Title"] = "Library Dashboard";
 }
+
 <style>
-    .slide-in {
-        animation: slideFromLeft 1.2s ease-out forwards;
+    .page-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 24px;
     }
 
-    .fade-in {
-        animation: fadeIn 1.6s ease-in forwards;
+    .page-title {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1a1d2e;
     }
 
-    @@keyframes slideFromLeft {
-        from {
-            transform: translateX(-100px);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
+    .page-subtitle {
+        margin: 4px 0 0;
+        font-size: 0.85rem;
+        color: #64748b;
     }
 
-    @@keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
+    .stat-card,
+    .content-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+    }
+
+    .stat-card {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        height: 100%;
+        padding: 22px;
+    }
+
+    .stat-icon {
+        width: 46px;
+        height: 46px;
+        border-radius: 10px;
+        background: rgba(0, 24, 168, 0.08);
+        color: #0018a8;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        flex: 0 0 auto;
+    }
+
+    .stat-value {
+        font-size: 1.8rem;
+        line-height: 1;
+        font-weight: 800;
+        color: #1a1d2e;
+        margin: 0 0 6px;
+    }
+
+    .stat-label {
+        margin: 0;
+        font-size: 0.8rem;
+        color: #64748b;
+        font-weight: 600;
+    }
+
+    .content-card {
+        padding: 24px;
+        margin-top: 24px;
+    }
+
+    .section-title {
+        margin: 0 0 16px;
+        font-size: 1rem;
+        font-weight: 700;
+        color: #1a1d2e;
+    }
+
+    .app-table {
+        width: 100%;
+        margin: 0;
+    }
+
+    .app-table thead {
+        background: #f8fafc;
+    }
+
+    .app-table th {
+        padding: 12px 16px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #64748b;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .app-table td {
+        padding: 14px 16px;
+        font-size: 0.875rem;
+        color: #1a1d2e;
+        border-bottom: 1px solid #f1f5f9;
+        vertical-align: middle;
+    }
+
+    .app-table tbody tr:hover {
+        background: #f8fafc;
+    }
+
+    .empty-state {
+        padding: 28px;
+        text-align: center;
+        color: #64748b;
+        font-size: 0.9rem;
+        border: 1px dashed #e2e8f0;
+        border-radius: 12px;
+        background: #f8fafc;
     }
 </style>
 
-<div class="container-fluid mt-2">
-    <!-- Welcome Section -->
-    <div class="row justify-content-center mb-2">
-        <div class="col-15 text-center">
-
-            <h1 class="display-6 text-primary slide-in">
-                Welcome to Your Library Dashboard !
-            </h1>
-            <p class="lead text-muted fade-in">
-                Monitor your Library Details
-            </p>
-
-            
-        </div>
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Dashboard</h1>
+        <p class="page-subtitle">Monitor library activity, circulation, and pending fines.</p>
     </div>
+</div>
 
-
-    <!-- Dashboard Metrics Cards -->
-    <div class="row justify-content-center">
-        <!-- Total Students -->
-        <div class="col-lg-3 col-md-6 mb-3">
-            <div class="card shadow-sm h-100">
-                <div class="card-body text-center">
-                    <i class="bi bi-people-fill text-info" style="font-size: 3rem;"></i>
-                    <h5 class="card-title mt-3">Total Students</h5>
-                    <h2 class="text-info">@Model.TotalStudents</h2>
-                    <p class="card-text">Registered Students ready to explore.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Total Books -->
-        <div class="col-lg-3 col-md-6 mb-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-body text-center">
-                    <i class="bi bi-book-fill text-success" style="font-size: 3rem;"></i>
-                    <h5 class="card-title mt-3">Total Books</h5>
-                    <h2 class="text-success">@Model.TotalBooks</h2>
-                    <p class="card-text">Books in our collection.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Total Authors -->
-        <div class="col-lg-3 col-md-6 mb-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-body text-center">
-                    <i class="bi bi-person-fill text-warning" style="font-size: 3rem;"></i>
-                    <h5 class="card-title mt-3">Total Authors</h5>
-                    <h2 class="text-warning">@Model.TotalAuthors</h2>
-                    <p class="card-text">Creative minds behind the stories.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Total Categories -->
-        <div class="col-lg-3 col-md-6 mb-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-body text-center">
-                    <i class="bi bi-tags-fill text-secondary" style="font-size: 3rem;"></i>
-                    <h5 class="card-title mt-3">Total Categories</h5>
-                    <h2 class="text-secondary">@Model.TotalCategories</h2>
-                    <p class="card-text">Help you find your next read.</p>
-                </div>
+<div class="row g-3">
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card">
+            <div class="stat-icon"><i class="bx bx-book"></i></div>
+            <div>
+                <p class="stat-value">@Model.TotalBooks</p>
+                <p class="stat-label">Total Books</p>
             </div>
         </div>
     </div>
 
-    <!-- Second Row: Issued and Available Books -->
-    <div class="row justify-content-center">
-        <!-- Currently Issued Books -->
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-body text-center">
-                    <i class="bi bi-arrow-right-circle-fill text-primary" style="font-size: 3rem;"></i>
-                    <h5 class="card-title mt-3">Currently Issued</h5>
-                    <h2 class="text-primary">@Model.CurrentlyIssued</h2>
-                    <p class="card-text">Books out on loan—keep them circulating!</p>
-                </div>
-            </div>
-        </div>
-
-       <!-- Overdue and Fines (Placeholder as per controller) -->
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-body text-center">
-                    <i class="bi bi-exclamation-triangle-fill text-danger" style="font-size: 3rem;"></i>
-                    <h5 class="card-title mt-3">Overdue & Fines</h5>
-                    <h2 class="text-danger">@Model.TotalPendingFine</h2>
-                    <p class="card-text">Total Pending Fine</p>
-                    
-                </div>
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card">
+            <div class="stat-icon"><i class="bx bxs-graduation"></i></div>
+            <div>
+                <p class="stat-value">@Model.TotalStudents</p>
+                <p class="stat-label">Students</p>
             </div>
         </div>
     </div>
 
-    <!-- Footer Encouragement -->
-    <div class="row justify-content-center mt-2">
-        <div class="col-12 text-center">
-            <p class="text-muted">Thank you for being part of our library community. Let's keep the pages turning and minds expanding!</p>
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card">
+            <div class="stat-icon"><i class="bx bx-transfer"></i></div>
+            <div>
+                <p class="stat-value">@Model.CurrentlyIssued</p>
+                <p class="stat-label">Issued Books</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-xl-3 col-md-6">
+        <div class="stat-card">
+            <div class="stat-icon"><i class="bx bx-receipt"></i></div>
+            <div>
+                <p class="stat-value">@Model.TotalPendingFine</p>
+                <p class="stat-label">Pending Fines</p>
+            </div>
         </div>
     </div>
 </div>
 
-<style>
-    /* Custom styles for better alignment and spacing */
-    .card {
-        border-radius: 10px;
-        transition: transform 0.2s;
+<div class="content-card">
+    <h2 class="section-title">Overdue Issues</h2>
+
+    @if (Model.OverdueBooks.Any())
+    {
+        <div class="table-responsive">
+            <table class="table app-table">
+                <thead>
+                    <tr>
+                        <th>Book</th>
+                        <th>Student</th>
+                        <th>Issue Date</th>
+                        <th>Due Date</th>
+                        <th class="text-end">Fine</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var issue in Model.OverdueBooks)
+                    {
+                        <tr>
+                            <td>@issue.Book?.Title</td>
+                            <td>@issue.Student?.Name</td>
+                            <td>@issue.IssueDate.ToString("dd MMM yyyy")</td>
+                            <td>@issue.DueDate.ToString("dd MMM yyyy")</td>
+                            <td class="text-end text-danger fw-semibold">₹@issue.FineAmount</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     }
-    .card:hover {
-        transform: translateY(-5px);
+    else
+    {
+        <div class="empty-state">
+            No overdue book issues are currently recorded.
+        </div>
     }
-    .h-100 {
-        height: 100%;
-    }
-    .display-4 {
-        font-weight: 300;
-    }
-    .blockquote {
-        font-style: italic;
-    }
-</style>
+</div>

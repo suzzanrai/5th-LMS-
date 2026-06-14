@@ -4,41 +4,111 @@
     ViewData["Title"] = "Delete Author";
 }
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card border-danger shadow">
-                <div class="card-header bg-danger text-white text-center">
-                    <h3><i class="bi bi-exclamation-triangle"></i> Confirm Delete</h3>
-                </div>
-                <div class="card-body text-center">
-                    <h4 class="text-danger">Are you sure you want to delete this author?</h4>
-                    <hr />
-                    <dl class="row text-start">
-                        <dt class="col-sm-4 fw-bold">Name:</dt>
-                        <dd class="col-sm-8">@Model.Name</dd>
+<style>
+    .delete-card {
+        max-width: 500px;
+        margin: 0 auto;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 28px;
+        text-align: center;
+    }
 
-                        <dt class="col-sm-4 fw-bold">Books Written:</dt>
-                        <dd class="col-sm-8">
-                            <span class="badge bg-warning">@Model.Books.Count</span>
-                            @if (Model.Books.Any())
-                            {
-                                <br /><small class="text-muted">Warning: Deleting author will affect related books!</small>
-                            }
-                        </dd>
-                    </dl>
+    .delete-icon {
+        color: #dc3545;
+        font-size: 3rem;
+        margin-bottom: 12px;
+    }
 
-                    <form asp-action="Delete" method="post" class="d-inline">
-                        <input type="hidden" name="id" value="@Model.AuthorId" />
-                        <button type="submit" class="btn btn-danger btn-lg">
-                            <i class="bi bi-trash"></i> Yes, Delete
-                        </button>
-                        <a asp-action="Index" class="btn btn-secondary btn-lg">
-                            <i class="bi bi-x-circle"></i> Cancel
-                        </a>
-                    </form>
-                </div>
-            </div>
+    .delete-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1a1d2e;
+        margin-bottom: 8px;
+    }
+
+    .delete-text {
+        font-size: 0.9rem;
+        color: #64748b;
+        margin-bottom: 20px;
+    }
+
+    .delete-name {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 16px;
+        margin-bottom: 24px;
+        text-align: left;
+    }
+
+    .field-label {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: #64748b;
+        margin-bottom: 4px;
+    }
+
+    .field-value {
+        font-size: 0.9rem;
+        color: #1a1d2e;
+        font-weight: 600;
+        margin-bottom: 12px;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .btn-app-secondary {
+        background: #ffffff;
+        color: #1a1d2e;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 8px 20px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-decoration: none;
+    }
+
+    .btn-danger {
+        border-radius: 8px;
+        padding: 8px 20px;
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+</style>
+
+<div class="delete-card">
+    <div class="delete-icon"><i class="bx bx-error-circle"></i></div>
+    <h1 class="delete-title">Delete Author</h1>
+    <p class="delete-text">This action cannot be undone. Related books may be affected.</p>
+
+    <div class="delete-name">
+        <span class="field-label">Name</span>
+        <div class="field-value">@Model.Name</div>
+
+        <span class="field-label">Books Written</span>
+        <div class="field-value">
+            @Model.Books.Count
+            @if (Model.Books.Any())
+            {
+                <span class="text-danger d-block mt-1">Deleting this author will affect related books.</span>
+            }
         </div>
     </div>
+
+    <form asp-action="Delete" method="post">
+        <input type="hidden" name="id" value="@Model.AuthorId" />
+        <div class="form-actions">
+            <a asp-action="Index" class="btn-app-secondary">Cancel</a>
+            <button type="submit" class="btn btn-danger">Confirm Delete</button>
+        </div>
+    </form>
 </div>

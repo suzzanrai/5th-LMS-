@@ -1,26 +1,114 @@
 @model Practice_Project.Models.CategoryViewModel
 
-<h2>Create New Category</h2>
-<hr />
+@{
+    ViewData["Title"] = "Create Category";
+}
 
-<form asp-action="Create" method="post">
+<style>
+    .page-header {
+        margin-bottom: 24px;
+    }
 
-    <div class="form-group mb-3">
-        <label asp-for="Name" class="form-label"></label>
-        <input asp-for="Name" class="form-control" placeholder="Enter category name" />
-        <span asp-validation-for="Name" class="text-danger"></span>
-    </div>
+    .page-title {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1a1d2e;
+    }
 
-    <div class="form-group mb-3">
-        <label asp-for="Description" class="form-label"></label>
-        <textarea asp-for="Description" class="form-control" placeholder="Enter description (optional)"></textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
+    .form-card {
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 24px;
+    }
 
-    <button type="submit" class="btn btn-success">Save</button>
-    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+    .form-card label {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: #64748b;
+        margin-bottom: 4px;
+    }
 
-</form>
+    .form-card .form-control {
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 10px 14px;
+        font-size: 0.875rem;
+    }
+
+    .form-card .form-control:focus {
+        border-color: #0018a8;
+        box-shadow: 0 0 0 3px rgba(0, 24, 168, 0.08);
+    }
+
+    .field-validation-error,
+    .text-danger {
+        font-size: 0.78rem;
+        color: #dc3545 !important;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 24px;
+    }
+
+    .btn-app-primary {
+        background: #0018a8;
+        color: #ffffff;
+        border: 1px solid #0018a8;
+        border-radius: 8px;
+        padding: 8px 20px;
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+
+    .btn-app-primary:hover {
+        background: #0015d4;
+        border-color: #0015d4;
+        color: #ffffff;
+    }
+
+    .btn-app-secondary {
+        background: #ffffff;
+        color: #1a1d2e;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 8px 20px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        text-decoration: none;
+    }
+</style>
+
+<div class="page-header">
+    <h1 class="page-title">Create Category</h1>
+</div>
+
+<div class="form-card">
+    <form asp-action="Create" method="post">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <label asp-for="Name" class="form-label"></label>
+                <input asp-for="Name" class="form-control" placeholder="Enter category name" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="col-12">
+                <label asp-for="Description" class="form-label"></label>
+                <textarea asp-for="Description" class="form-control" rows="5" placeholder="Enter description (optional)"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <a asp-action="Index" class="btn-app-secondary">Back to List</a>
+            <button type="submit" class="btn-app-primary">Save</button>
+        </div>
+    </form>
+</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
