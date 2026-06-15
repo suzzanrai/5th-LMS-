@@ -42,7 +42,6 @@ public class BookRepository : IBookRepository
 
         existing.Title = book.Title;
         existing.ISBN = book.ISBN;
-        existing.PublicationYear = book.PublicationYear;
         existing.TotalQuantity = book.TotalQuantity;
         existing.QuantityAvailable = book.QuantityAvailable;
         existing.PublicationDate = book.PublicationDate;

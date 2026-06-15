@@ -41,6 +41,31 @@ builder.Services.AddScoped<IBookIssueRepository, BookIssueRepository>();
 builder.Services.AddScoped<IBookIssueServices, BookIssueServices>();
 var app = builder.Build();
 
+// Auto-apply migrations so schema always matches the code
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<LibraryDbContext>();
+    db.Database.Migrate();
+
+    // Seed default admin user
+    var sha256 = System.Security.Cryptography.SHA256.Create();
+    var hashBytes = sha256.ComputeHash(System.Text.Encoding.UTF8.GetBytes("admin"));
+    var hash = Convert.ToHexString(hashBytes).ToLower();
+
+    if (!db.Set<Practice_Project.Entities.User>().Any(u => u.Email == "admin@admin.com"))
+    {
+        db.Add(new Practice_Project.Entities.User
+        {
+            Email = "admin@admin.com",
+            Password = hash,
+            Role = "Admin",
+            IsActive = true,
+            CreatedAt = DateTime.UtcNow
+        });
+        db.SaveChanges();
+    }
+}
+
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

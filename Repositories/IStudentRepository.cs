@@ -10,5 +10,6 @@ public interface IStudentRepository
     Task UpdateAsync(Student student);
     Task DeleteAsync(int id);
     Task<bool> ExistsAsync(int id);
+    Task<int> GetLatestRollNumberAsync();
 }
 

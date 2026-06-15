@@ -36,7 +36,9 @@ namespace Practice_Project.Controllers
 
         //overdue
            var overdueIssues = await _context.BookIssues
-               .Where(bi=> bi.ReturnDate == null && bi.DueDate < DateTime.UtcNow)
+               .Include(bi => bi.Book)
+               .Include(bi => bi.Student)
+               .Where(bi => bi.ReturnDate == null && bi.DueDate < DateTime.UtcNow)
                .ToListAsync();
 
            model.OverdueCount = overdueIssues.Count;
@@ -45,13 +47,14 @@ namespace Practice_Project.Controllers
            foreach (var issue in overdueIssues)
            {
                int daysOverdue = (DateTime.Now - issue.DueDate).Days;
-               totalFine += daysOverdue * 5.0m;
+               issue.FineAmount = daysOverdue * 5.0m;
+               totalFine += issue.FineAmount;
            }
 
-           model.TotalPendingFine = $"₹{totalFine:F2}";
-           
-         
-            return View(model);
+           model.OverdueBooks = overdueIssues;
+           model.TotalPendingFine = $"रु {totalFine:F2}";
+
+             return View(model);
         }
     }
 }

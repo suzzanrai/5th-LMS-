@@ -26,7 +26,7 @@ public class BookIssueRepository : IBookIssueRepository
         {
             var term = searchString.ToLower();
             q = q.Where(bi =>
-                bi.Student.Name.ToLower().Contains(term) ||
+                bi.Student.RollNumber.ToLower().Contains(term) ||
                 bi.Book.Title.ToLower().Contains(term));
         }
 
@@ -53,6 +53,11 @@ public class BookIssueRepository : IBookIssueRepository
         var book = await _context.Books.FindAsync(bookId);
         if (book == null || book.QuantityAvailable <= 0)
             return (false, "This book is not available for issue.");
+
+        var alreadyIssued = await _context.BookIssues
+            .AnyAsync(bi => bi.BookId == bookId && bi.StudentId == studentId && bi.Status == "Issued");
+        if (alreadyIssued)
+            return (false, "This student already has this book issued. A student cannot borrow the same book twice.");
 
         var issue = new BookIssue
         {

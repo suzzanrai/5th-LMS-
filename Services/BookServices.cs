@@ -22,7 +22,6 @@ public class BookServices : IBookServices
             BookId = b.Id,
             Title = b.Title,
             ISBN = b.ISBN,
-            PublicationYear = b.PublicationYear,
             TotalQuantity = b.TotalQuantity,
             QuantityAvailable = b.QuantityAvailable,
             PublicationDate = b.PublicationDate,
@@ -44,7 +43,6 @@ public class BookServices : IBookServices
             BookId = b.Id,
             Title = b.Title,
             ISBN = b.ISBN,
-            PublicationYear = b.PublicationYear,
             TotalQuantity = b.TotalQuantity,
             QuantityAvailable = b.QuantityAvailable,
             PublicationDate = b.PublicationDate,
@@ -66,7 +64,6 @@ public class BookServices : IBookServices
         {
             Title = model.Title,
             ISBN = model.ISBN,
-            PublicationYear = model.PublicationYear,
             TotalQuantity = model.TotalQuantity,
             QuantityAvailable = quantityAvailable,
             PublicationDate = model.PublicationDate.HasValue ? DateTime.SpecifyKind(model.PublicationDate.Value, DateTimeKind.Utc) : null,
@@ -85,7 +82,6 @@ public class BookServices : IBookServices
 
         existing.Title = model.Title;
         existing.ISBN = model.ISBN;
-        existing.PublicationYear = model.PublicationYear;
         existing.TotalQuantity = model.TotalQuantity;
         existing.QuantityAvailable = model.QuantityAvailable;
         existing.PublicationDate = model.PublicationDate.HasValue ? DateTime.SpecifyKind(model.PublicationDate.Value, DateTimeKind.Utc) : null;

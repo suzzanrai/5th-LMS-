@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Practice_Project.Migrations
 {
     /// <inheritdoc />
-    public partial class InitalCreate : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -49,8 +49,7 @@ namespace Practice_Project.Migrations
                     Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Phone = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
-                    RollNumber = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    RollNumber = table.Column<string>(type: "text", nullable: false),
                     IsActive = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
@@ -206,11 +205,39 @@ namespace Practice_Project.Migrations
                 table: "Users",
                 column: "Email",
                 unique: true);
+
+            // Safety net: auto-fills RollNumber if the app ever sends NULL
+            migrationBuilder.Sql("""
+                CREATE OR REPLACE FUNCTION trg_student_roll_number()
+                RETURNS TRIGGER AS $$
+                DECLARE
+                    next_num INTEGER;
+                BEGIN
+                    IF NEW."RollNumber" IS NULL OR NEW."RollNumber" = '' THEN
+                        SELECT COALESCE(
+                            MAX(CAST(SPLIT_PART("RollNumber", '-', 3) AS INTEGER)), 0
+                        ) + 1 INTO next_num FROM "Students";
+                        NEW."RollNumber" := 'LMS-' || EXTRACT(YEAR FROM CURRENT_DATE)::text || '-' || LPAD(next_num::text, 4, '0');
+                    END IF;
+                    RETURN NEW;
+                END;
+                $$ LANGUAGE plpgsql;
+
+                CREATE TRIGGER trg_students_roll_number
+                    BEFORE INSERT ON "Students"
+                    FOR EACH ROW
+                    EXECUTE FUNCTION trg_student_roll_number();
+            """);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.Sql("""
+                DROP TRIGGER IF EXISTS trg_students_roll_number ON "Students";
+                DROP FUNCTION IF EXISTS trg_student_roll_number();
+            """);
+
             migrationBuilder.DropTable(
                 name: "Fines");
 

@@ -52,4 +52,11 @@ public class BookIssueServices : IBookIssueServices
     {
         return await _studentRepo.GetAllAsync(null);
     }
+
+    public async Task<Student?> GetStudentByRollNumberAsync(string rollNumber)
+    {
+        var students = await _studentRepo.GetAllAsync(null);
+        return students.FirstOrDefault(s =>
+            s.RollNumber.Equals(rollNumber, StringComparison.OrdinalIgnoreCase));
+    }
 }

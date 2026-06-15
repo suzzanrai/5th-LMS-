@@ -42,6 +42,7 @@ namespace Practice_Project.Controllers
             if (!result.Success)
             {
                 ModelState.AddModelError("", result.Error ?? "Unable to issue this book.");
+                ViewBag.ErrorMessage = result.Error;
                 ViewBag.Books = await _bookIssueService.GetAvailableBooksAsync();
                 ViewBag.Students = await _bookIssueService.GetStudentsAsync();
                 return View(vm);

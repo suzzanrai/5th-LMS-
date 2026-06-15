@@ -18,14 +18,10 @@ namespace Practice_Project.Models
         public string ISBN { get; set; } = string.Empty;
 
         [Required]
-        [Range(1450, 2100, ErrorMessage = "Publication year must be between 1450 and 2100.")]
-        public int PublicationYear { get; set; }
-
-        [Required]
-        [Range(1, 10000)]
+        [Range(0, int.MaxValue, ErrorMessage = "Quantity cannot be negative")]
         public int TotalQuantity { get; set; }
 
-        [Range(0, 10000)]
+        [Range(0, int.MaxValue, ErrorMessage = "Quantity cannot be negative")]
         public int QuantityAvailable { get; set; }
 
         [DataType(DataType.Date)]

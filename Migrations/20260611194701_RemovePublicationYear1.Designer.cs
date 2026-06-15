@@ -12,8 +12,8 @@ using Practice_Project.Data;
 namespace Practice_Project.Migrations
 {
     [DbContext(typeof(LibraryDbContext))]
-    [Migration("20260611082528_InitalCreate")]
-    partial class InitalCreate
+    [Migration("20260611194701_RemovePublicationYear1")]
+    partial class RemovePublicationYear1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -70,9 +70,6 @@ namespace Practice_Project.Migrations
 
                     b.Property<DateTime?>("PublicationDate")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("PublicationYear")
-                        .HasColumnType("integer");
 
                     b.Property<int>("QuantityAvailable")
                         .HasColumnType("integer");
@@ -220,11 +217,9 @@ namespace Practice_Project.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)");
 
-                    b.Property<int>("RollNumber")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("RollNumber"));
+                    b.Property<string>("RollNumber")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 

@@ -5,7 +5,6 @@ namespace Practice_Project.Entities
 {
     public class Student
     {
-        // CHANGED: StudentId → Id (only this line changed)
         [Key]
         public int Id { get; set; }
 
@@ -22,12 +21,10 @@ namespace Practice_Project.Entities
         [StringLength(20)]
         public string? Phone { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int RollNumber { get; set; }
+        public string RollNumber { get; set; } = string.Empty;
 
         public bool IsActive { get; set; } = true;
 
-        // One student → many book issues (already perfect)
         public virtual ICollection<BookIssue> BookIssues { get; set; } = new List<BookIssue>();
         
         public ICollection<Fine> Fines { get; set; } = new List<Fine>();

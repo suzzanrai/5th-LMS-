@@ -35,8 +35,13 @@ public class StudentServices : IStudentServices
 
     public async Task CreateAsync(StudentVm model)
     {
+        var latest = await _repo.GetLatestRollNumberAsync();
+        var nextNumber = (latest + 1).ToString("D4");
+        var year = DateTime.UtcNow.Year;
+
         var entity = new Student
         {
+            RollNumber = $"LMS-{year}-{nextNumber}",
             Name = model.Name,
             Email = model.Email,
             Phone = model.Phone

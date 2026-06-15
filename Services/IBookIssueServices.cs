@@ -11,4 +11,5 @@ public interface IBookIssueServices
     Task<(bool Success, string? Error, decimal FineAmount, int OverdueDays, BookIssue? Issue)> ProcessReturnAsync(int id, bool confirm);
     Task<List<Book>> GetAvailableBooksAsync();
     Task<List<Student>> GetStudentsAsync();
+    Task<Student?> GetStudentByRollNumberAsync(string rollNumber);
 }

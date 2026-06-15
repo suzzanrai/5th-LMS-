@@ -40,7 +40,7 @@ public class StudentRepository : IStudentRepository
         existing.Name = student.Name;
         existing.Email = student.Email;
         existing.Phone = student.Phone;
-        existing.RollNumber = student.RollNumber;
+
         await _context.SaveChangesAsync();
     }
 
@@ -55,5 +55,17 @@ public class StudentRepository : IStudentRepository
     }
 
     public async Task<bool> ExistsAsync(int id) => await _context.Students.AnyAsync(s => s.Id == id);
+
+    public async Task<int> GetLatestRollNumberAsync()
+    {
+        var last = await _context.Students
+            .OrderByDescending(s => s.Id)
+            .Select(s => s.RollNumber)
+            .FirstOrDefaultAsync();
+        if (string.IsNullOrEmpty(last)) return 0;
+        var parts = last.Split('-');
+        if (parts.Length < 3 || !int.TryParse(parts[2], out var num)) return 0;
+        return num;
+    }
 }
 

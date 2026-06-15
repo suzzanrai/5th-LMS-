@@ -150,7 +150,7 @@
             <input class="search-input"
                    type="text"
                    name="searchString"
-                   placeholder="Search by student or book title"
+                   placeholder="Search by student ID or book title"
                    aria-label="Search"
                    value="@ViewData["CurrentFilter"]" />
 
@@ -234,7 +234,7 @@
                             <td>
                                 @if (item.FineAmount > 0)
                                 {
-                                    <span class="text-danger fw-bold">₹@item.FineAmount</span>
+                                    <span class="text-danger fw-bold">Rs. @item.FineAmount</span>
                                 }
                                 else
                                 {

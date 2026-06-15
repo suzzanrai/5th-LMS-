@@ -198,7 +198,6 @@
                         <th>Author</th>
                         <th>Category</th>
                         <th>ISBN</th>
-                        <th>Year</th>
                         <th>Available / Total</th>
                         <th>Status</th>
                         <th class="text-end">Actions</th>
@@ -213,7 +212,6 @@
                             <td>@book.AuthorName</td>
                             <td>@book.CategoryName</td>
                             <td><code>@book.ISBN</code></td>
-                            <td>@book.PublicationYear</td>
                             <td>
                                 <span class="@(book.QuantityAvailable > 0 ? "text-success" : "text-danger") fw-bold">
                                     @book.QuantityAvailable
