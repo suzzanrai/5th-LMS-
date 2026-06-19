@@ -65,3 +65,8 @@ publish/
 
 # Node
 node_modules/
+# Ignore Migrations folder
+**/Migrations/
+
+# Ignore appsettings.Development.json
+**/appsettings.Development.json
